@@ -77,16 +77,32 @@
       <div class="flex mb-4">
         <div class="mr-2">
           <UInputMenu
-            placeholder="Name"
-            v-model="newDrug.name"
-            :options="drugOptions"
+            :search="search"
+            :loading="loading"
+            placeholder="search for a drug"
+            v-model="selectedName"
+            option-attribute="name"
+            trailing
+            by="id"
+            @change="changed($event)"
           />
         </div>
         <div class="mr-2">
           <UInputMenu
+            v-if="selected && selected.doses"
+            placeholder="Dose"
+            v-model="selectedDose"
+            :options="
+              selected.doses.map(
+                (item) => `${item.dose.value} ${item.dose.unit}`
+              )
+            "
+          />
+          <UInputMenu
+            v-else
             placeholder="Dose"
             v-model="newDrug.dose"
-            :options="doseOptions"
+            disabled="true"
           />
         </div>
         <div class="mr-2">
@@ -98,9 +114,18 @@
         </div>
         <div class="mr-2">
           <UInputMenu
+            v-if="selected && selected.frequency"
+            v-model="selectedFrequency"
+            placeholder="Frequency"
+            :options="
+              selected.frequency.map((item) => `${item.frequency.arabic}`)
+            "
+          />
+          <UInputMenu
+            v-else
             placeholder="Frequency"
             v-model="newDrug.frequency"
-            :options="frequencyOptions"
+            :disabled="true"
           />
         </div>
         <div class="mr-2">
@@ -129,7 +154,40 @@
 
 <script setup>
 const isOpen = ref(false)
-const selected = ref([])
+const selected = ref(null)
+const selectedFrequency = ref(null)
+const selectedName = ref(null)
+const selectedDose = ref(null)
+const loading = ref(false)
+
+const changed = async (e) => {
+  selected.value = e.expand
+  selectedFrequency.value = null
+  selectedDose.value = null
+}
+
+async function search(q) {
+  loading.value = true
+  try {
+    const users = await $fetch(
+      `https://mcq-db.dakakean.com/api/collections/drugs/records?filter=name~"${q}"&expand=doses,frequency`
+    )
+    if (users.items.length === 0) {
+      loading.value = false
+      return []
+    }
+    loading.value = false
+    console.log(1)
+    console.log(users.items[0].expand)
+
+    selected.value = users.items[0].expand
+
+    return users.items
+  } catch (error) {
+    console.log(error)
+    loading.value = false
+  }
+}
 
 const drugOptions = [
   "Amlodipine",

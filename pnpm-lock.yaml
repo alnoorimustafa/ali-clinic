@@ -17,6 +17,9 @@ dependencies:
   pdfmake:
     specifier: ^0.2.18
     version: 0.2.18
+  pocketbase:
+    specifier: ^0.25.0
+    version: 0.25.0
   vue:
     specifier: latest
     version: 3.5.13(typescript@5.7.2)
@@ -5188,6 +5191,10 @@ packages:
 
   /png-js@1.0.0:
     resolution: {integrity: sha512-k+YsbhpA9e+EFfKjTCH3VW6aoKlyNYI6NYdTfDL4CIvFnvsuO84ttonmZE7rc+v23SLTH8XX+5w/Ak9v0xGY4g==}
+    dev: false
+
+  /pocketbase@0.25.0:
+    resolution: {integrity: sha512-xbjiQG/tnh2HsjZrTW7ZEJASvl4hmGAB5PQAmNRkRU8BmrPib7zwKyXdiYJl34QN7ADpqykZD2lAMdDtrrQbuw==}
     dev: false
 
   /portfinder@1.0.32:
