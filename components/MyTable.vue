@@ -29,96 +29,68 @@
               <thead class="bg-gray-50">
                 <tr>
                   <th
+                    v-once
                     v-for="item in header"
                     scope="col"
-                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 border"
                   >
                     {{ item }}
                   </th>
                 </tr>
               </thead>
-              <!-- rows -->
-              <tbody class="divide-y divide-gray-200 bg-white">
-                <tr v-for="(drug, id) in drugs" :key="drug.name">
-                  <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                  >
-                    {{ id + 1 }}
-                  </td>
-                  <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                  >
-                    <span>
-                      {{ drug.name }}
-                    </span>
-                  </td>
-                  <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                  >
-                    <span>
-                      {{ drug.dose }}
-                    </span>
-                  </td>
-                  <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                  >
-                    <span>{{ drug.when }}</span>
-                  </td>
-                  <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                  >
-                    <span>{{ drug.frequency }}</span>
-                  </td>
-                  <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                  >
-                    <span>{{ drug.duration }}</span>
-                  </td>
-                  <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                  >
-                    <span>{{ drug.quantity }}</span>
-                  </td>
-                  <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                  >
-                    <span>{{ drug.notes }}</span>
-                  </td>
-                  <!-- <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                  >
-                    <USelectMenu
-                      @change="console.log(selected)"
-                      placeholder="select a drug"
-                      searchable
-                      v-model="selected[id]"
-                      :options="options"
-                    />
-                  </td>
-                  <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                  >
-                    {{ person.name }}
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {{ person.title }}
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {{ person.email }}
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {{ person.role }}
-                  </td>
-                  <td
-                    class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6"
-                  >
-                    <a href="#" class="text-indigo-600 hover:text-indigo-900"
-                      >Edit<span class="sr-only">, {{ person.name }}</span></a
-                    >
-                  </td> -->
-                </tr>
-              </tbody>
             </table>
+            <div v-for="(drug, id) in drugs" :key="drug.name">
+              <table class="min-w-full divide-y divide-gray-300">
+                <tbody class="divide-y divide-gray-200 bg-white mainTable">
+                  <tr>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    >
+                      {{ id + 1 }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    >
+                      <span>
+                        {{ drug.name }}
+                      </span>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 bg-slate-600"
+                    >
+                      <span>
+                        {{ drug.dose }}
+                      </span>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    >
+                      <span>{{ drug.when }}</span>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    >
+                      <span>{{ drug.frequency }}</span>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    >
+                      <span>{{ drug.duration }}</span>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    >
+                      <span>{{ drug.quantity }}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6" class="notes-row p-4">
+                      {{ drug.notes }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -151,6 +123,8 @@
   </div>
 </template>
 
+<style></style>
+
 <script setup>
 const isOpen = ref(false)
 const selected = ref([])
@@ -178,6 +152,7 @@ const newDrug = ref({
   when: "",
   frequency: "",
   duration: "",
+  notes: "",
 })
 
 const addNewDrug = () => {
@@ -188,6 +163,7 @@ const addNewDrug = () => {
     when: "",
     frequency: "",
     duration: "",
+    notes: "",
   }
   console.log(drugs)
 }
@@ -199,6 +175,8 @@ const drugs = ref([
     when: "morning",
     frequency: "1x1",
     duration: "3 days",
+    notes:
+      "This is a star-sized column. The next column over, an auto-sized column, will not wrap to accomodate all the text in this cell, because it has been given the noWrap style",
   },
   {
     name: "Metformin",
@@ -206,16 +184,9 @@ const drugs = ref([
     when: "night",
     frequency: "2x2",
     duration: "60 days",
+    notes:
+      "This is a star-sized column. The next column over, an auto-sized column, will not wrap to accomodate all the text in this cell, because it has been given the noWrap style",
   },
 ])
-const header = [
-  "#",
-  "Name",
-  "Dose",
-  "When",
-  "Frequency",
-  "Duration",
-  "Quantity",
-  "Notes",
-]
+const header = ["#", "Name", "Dose", "When", "Frequency", "Duration"]
 </script>

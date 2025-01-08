@@ -1,7 +1,7 @@
 <template>
   <div>
     <MyEditTable />
-    <!-- <MyTable /> -->
+    <MyTable />
   </div>
 </template>
 
