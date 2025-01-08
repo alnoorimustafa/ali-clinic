@@ -2,6 +2,8 @@
 import PocketBase from "pocketbase"
 const pb = new PocketBase("https://mcq-db.dakakean.com")
 
+const selected = ref([])
+const drugId = ref("")
 const drugName = ref("")
 const frequency = ref("")
 const dose = ref("")
@@ -11,11 +13,12 @@ const note = ref("")
 const isSubmitting = ref(false)
 const errorMessage = ref("")
 const drugs = ref([])
+const editing = ref(false)
 
 const createDrug = async () => {
-  isSubmitting.value = true
-  errorMessage.value = ""
-  try {
+  if (editing.value) {
+    console.log("Editing drug")
+
     const data = {
       name: drugName.value,
       frequency: frequency.value
@@ -27,15 +30,40 @@ const createDrug = async () => {
       note: note.value,
     }
 
-    const record = await pb.collection("drugs").create(data)
+    const record = await pb.collection("drugs").update(drugId.value, data)
 
-    console.log("Drug created successfully:", record)
+    editing.value = false
     resetForm()
-  } catch (error) {
-    console.error("Error creating drug:", error)
-    errorMessage.value = error.message || "Failed to create drug."
-  } finally {
-    isSubmitting.value = false
+    fetchDrugs()
+  } else {
+    console.log("creating drug")
+    isSubmitting.value = true
+    errorMessage.value = ""
+    try {
+      const data = {
+        name: drugName.value,
+        frequency: frequency.value
+          .split("\n")
+          .filter((line) => line.trim() !== ""), // Split by new lines for frequency
+        dose: dose.value.split("\n").filter((line) => line.trim() !== ""), // Split by new lines for dose
+        when: whenToTake.value.split("\n").filter((line) => line.trim() !== ""), // Split by new lines for when
+        duration: duration.value
+          .split("\n")
+          .filter((line) => line.trim() !== ""), // Split by new lines for duration
+        note: note.value,
+      }
+
+      const record = await pb.collection("drugs").create(data)
+
+      console.log("Drug created successfully:", record)
+      resetForm()
+    } catch (error) {
+      console.error("Error creating drug:", error)
+      errorMessage.value = error.message || "Failed to create drug."
+    } finally {
+      isSubmitting.value = false
+      fetchDrugs()
+    }
   }
 }
 
@@ -46,12 +74,38 @@ const resetForm = () => {
   whenToTake.value = ""
   duration.value = ""
   note.value = ""
+  drugId.value = ""
 }
 
 const fetchDrugs = async () => {
   const records = await pb.collection("drugs").getFullList({})
   console.log(records)
-  drugs.value = records
+  drugs.value = records.map((drug, i) => ({
+    Id: drug.id,
+    name: drug.name,
+    dose: drug.dose.join(", "),
+    when: drug.when.join(", "),
+    frequency: drug.frequency.join(", "),
+    duration: drug.duration.join(", "),
+    notes: drug.notes,
+  }))
+}
+
+function select(row) {
+  editing.value = true
+  const index = selected.value.findIndex((item) => item.id === row.id)
+  if (index === -1) {
+    selected.value.push(row)
+    drugId.value = row.Id
+    drugName.value = row.name
+    frequency.value = row.frequency
+    dose.value = row.dose
+    whenToTake.value = row.when
+    duration.value = row.duration
+    note.value = row.notes
+  } else {
+    selected.value.splice(index, 1)
+  }
 }
 
 onMounted(async () => {
@@ -60,7 +114,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="form-container p-4 max-w-md mx-auto bg-white rounded shadow-md">
+  <UContainer class="my-10">
     <h1 class="text-xl font-semibold mb-4">Add New Drug</h1>
 
     <form @submit.prevent="createDrug">
@@ -148,27 +202,42 @@ onMounted(async () => {
 
       <div class="form-group">
         <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
-          {{ isSubmitting ? "Submitting..." : "Create Drug" }}
+          {{
+            isSubmitting
+              ? "Submitting..."
+              : editing
+              ? "Edit Drug"
+              : "Create Drug"
+          }}
         </button>
       </div>
     </form>
-
-    <!-- <div v-for="drug in drugs" :key="drug.id">
-      <div><strong>Name:</strong> {{ drug.name }}</div>
-      <div><strong>Frequency:</strong> {{ drug.frequency.join(", ") }}</div>
-      <div><strong>Dose:</strong> {{ drug.dose.join(", ") }}</div>
-      <div><strong>When to Take:</strong> {{ drug.when.join(", ") }}</div>
-      <div><strong>Duration:</strong> {{ drug.duration.join(", ") }}</div>
-      <div><strong>Note:</strong> {{ drug.note }}</div>
-      <hr />
-    </div> -->
-  </div>
+  </UContainer>
+  <UDivider class="my-10" />
+  <UContainer class="my-10">
+    <div
+      class="border rounded border-gray-200 dark:border-gray-700 border-collapse"
+    >
+      <UTable
+        v-model="selected"
+        :rows="[...drugs]"
+        class="w-full"
+        :single-select="true"
+        @select="select"
+        @change="
+          () => {
+            if (selected.length === 0) {
+              editing = false
+              resetForm()
+            }
+          }
+        "
+      />
+    </div>
+  </UContainer>
 </template>
 
 <style scoped>
-.form-container {
-  background-color: #f9fafb;
-}
 .input,
 .textarea {
   width: 100%;
