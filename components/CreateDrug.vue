@@ -7,14 +7,14 @@ const pb = new PocketBase("https://mcq-db.dakakean.com")
 // Reactive state
 const selected = ref([])
 const form = ref({
-  id: "",
-  brand: "",
-  name: "",
-  frequency: "",
-  dose: "",
-  when: "",
-  duration: "",
-  note: "",
+  id: null,
+  brand: null,
+  name: null,
+  frequency: null,
+  dose: null,
+  when: null,
+  duration: null,
+  note: null,
 })
 const drugs = ref([])
 const editing = ref(false)
@@ -24,14 +24,14 @@ const errorMessage = ref("")
 // Helper functions
 const resetForm = () => {
   form.value = {
-    id: "",
-    brand: "",
-    name: "",
-    frequency: "",
-    dose: "",
-    when: "",
-    duration: "",
-    note: "",
+    id: null,
+    brand: null,
+    name: null,
+    frequency: null,
+    dose: null,
+    when: null,
+    duration: null,
+    note: null,
   }
   editing.value = false
   selected.value = []
@@ -66,6 +66,8 @@ const fetchDrugs = async () => {
 const createOrUpdateDrug = async () => {
   isSubmitting.value = true
   errorMessage.value = ""
+
+  console.log(form.value)
 
   const data = {
     name: form.value.name,
