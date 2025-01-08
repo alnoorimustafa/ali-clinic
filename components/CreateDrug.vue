@@ -18,10 +18,12 @@ const createDrug = async () => {
   try {
     const data = {
       name: drugName.value,
-      frequency: frequency.value,
-      dose: dose.value,
-      when: whenToTake.value,
-      duration: duration.value,
+      frequency: frequency.value
+        .split("\n")
+        .filter((line) => line.trim() !== ""), // Split by new lines for frequency
+      dose: dose.value.split("\n").filter((line) => line.trim() !== ""), // Split by new lines for dose
+      when: whenToTake.value.split("\n").filter((line) => line.trim() !== ""), // Split by new lines for when
+      duration: duration.value.split("\n").filter((line) => line.trim() !== ""), // Split by new lines for duration
       note: note.value,
     }
 
@@ -80,56 +82,52 @@ onMounted(async () => {
         <label for="frequency" class="block text-sm font-medium text-gray-700"
           >Frequency</label
         >
-        <input
+        <textarea
           v-model="frequency"
           id="frequency"
-          type="text"
-          class="input"
-          placeholder="Enter frequency"
+          class="textarea"
+          placeholder="Enter frequency (one per line)"
           required
-        />
+        ></textarea>
       </div>
 
       <div class="form-group mb-4">
         <label for="dose" class="block text-sm font-medium text-gray-700"
           >Dose</label
         >
-        <input
+        <textarea
           v-model="dose"
           id="dose"
-          type="text"
-          class="input"
-          placeholder="Enter dose"
+          class="textarea"
+          placeholder="Enter dose (one per line)"
           required
-        />
+        ></textarea>
       </div>
 
       <div class="form-group mb-4">
         <label for="when" class="block text-sm font-medium text-gray-700"
           >When to Take</label
         >
-        <input
+        <textarea
           v-model="whenToTake"
           id="when"
-          type="text"
-          class="input"
-          placeholder="Enter when to take"
+          class="textarea"
+          placeholder="Enter when to take (one per line)"
           required
-        />
+        ></textarea>
       </div>
 
       <div class="form-group mb-4">
         <label for="duration" class="block text-sm font-medium text-gray-700"
           >Duration</label
         >
-        <input
+        <textarea
           v-model="duration"
           id="duration"
-          type="text"
-          class="input"
-          placeholder="Enter duration"
+          class="textarea"
+          placeholder="Enter duration (one per line)"
           required
-        />
+        ></textarea>
       </div>
 
       <div class="form-group mb-4">
@@ -154,14 +152,16 @@ onMounted(async () => {
         </button>
       </div>
     </form>
-    <div v-for="drug in drugs" :key="drug.id">
-      {{ drug.name }}
-      {{ drug.frequency }}
-      {{ drug.dose }}
-      {{ drug.when }}
-      {{ drug.duration }}
-      {{ drug.note }}
-    </div>
+
+    <!-- <div v-for="drug in drugs" :key="drug.id">
+      <div><strong>Name:</strong> {{ drug.name }}</div>
+      <div><strong>Frequency:</strong> {{ drug.frequency.join(", ") }}</div>
+      <div><strong>Dose:</strong> {{ drug.dose.join(", ") }}</div>
+      <div><strong>When to Take:</strong> {{ drug.when.join(", ") }}</div>
+      <div><strong>Duration:</strong> {{ drug.duration.join(", ") }}</div>
+      <div><strong>Note:</strong> {{ drug.note }}</div>
+      <hr />
+    </div> -->
   </div>
 </template>
 
@@ -169,12 +169,7 @@ onMounted(async () => {
 .form-container {
   background-color: #f9fafb;
 }
-.input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-}
+.input,
 .textarea {
   width: 100%;
   padding: 0.5rem;
