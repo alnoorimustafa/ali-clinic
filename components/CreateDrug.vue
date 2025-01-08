@@ -165,6 +165,9 @@ onMounted(fetchDrugs)
 
 <template>
   <UContainer class="my-10">
+    <div class="my-10">
+      <UButton to="/">back</UButton>
+    </div>
     <div class="grid grid-cols-3 gap-6">
       <div class="col-span-1 max-w-lg">
         <h1 class="text-xl font-semibold mb-4">

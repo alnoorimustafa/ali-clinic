@@ -14,6 +14,16 @@
           option-attribute="name"
         />
       </div>
+      <!-- brand -->
+      <div class="ml-2">
+        <UInputMenu
+          v-if="selected && selected.brand"
+          placeholder="Brand"
+          v-model="selectedBrand"
+          :options="selected.brand"
+        />
+        <UInputMenu v-else placeholder="Brand" disabled />
+      </div>
       <!-- doses -->
       <div class="ml-2">
         <UInputMenu
@@ -57,7 +67,13 @@
     </div>
     <!-- notes -->
     <div class="mb-4">
-      <UTextarea placeholder="Notes" v-model="selectedNotes" />
+      <UInputMenu
+        v-if="selected && selected.note"
+        placeholder="Note"
+        v-model="selectedNote"
+        :options="[selected.note]"
+      />
+      <UInputMenu v-else placeholder="Note" disabled="" />
     </div>
     <div>
       <UButton class="w-auto" label="Add" color="primary" @click="submitForm" />
@@ -75,7 +91,7 @@ const selectedDose = ref(null)
 const selectedWhen = ref(null)
 const selectedFrequency = ref(null)
 const selectedDuration = ref(null)
-const selectedNotes = ref(null)
+const selectedNote = ref(null)
 
 const loading = ref(false)
 
@@ -90,7 +106,7 @@ const submitForm = () => {
     when: selectedWhen.value,
     frequency: selectedFrequency.value,
     duration: selectedDuration.value,
-    notes: selectedNotes.value,
+    notes: selectedNote.value,
   }
   emit("add-drug", drugToAdd)
 
@@ -99,7 +115,7 @@ const submitForm = () => {
   selectedWhen.value = null
   selectedFrequency.value = null
   selectedDuration.value = null
-  selectedNotes.value = null
+  selectedNote.value = null
 }
 
 const changed = async (e) => {
@@ -109,7 +125,7 @@ const changed = async (e) => {
   selectedWhen.value = null
   selectedDose.value = null
   selectedDuration.value = null
-  selectedNotes.value = null
+  selectedNote.value = null
 }
 
 async function search(q) {
