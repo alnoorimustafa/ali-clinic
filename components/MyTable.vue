@@ -178,8 +178,6 @@ const newDrug = ref({
   when: "",
   frequency: "",
   duration: "",
-  quantity: "",
-  note: "",
 })
 
 const addNewDrug = () => {
@@ -190,8 +188,6 @@ const addNewDrug = () => {
     when: "",
     frequency: "",
     duration: "",
-    quantity: "",
-    note: "",
   }
   console.log(drugs)
 }
@@ -203,8 +199,6 @@ const drugs = ref([
     when: "morning",
     frequency: "1x1",
     duration: "3 days",
-    quantity: "30",
-    notes: "hypotension",
   },
   {
     name: "Metformin",
@@ -212,8 +206,6 @@ const drugs = ref([
     when: "night",
     frequency: "2x2",
     duration: "60 days",
-    quantity: "240",
-    notes: "blood sugar",
   },
 ])
 const header = [

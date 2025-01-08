@@ -40,8 +40,6 @@ const generatePrescription = async () => {
       props.prescription[index].when || "",
       props.prescription[index].frequency || "",
       props.prescription[index].duration || "",
-      props.prescription[index].quantity || "",
-      props.prescription[index].notes || "",
     ])
   }
 
@@ -53,19 +51,21 @@ const generatePrescription = async () => {
       {
         style: "treatment",
         table: {
-          widths: ["auto", "*", "*", "*", "*", "*", "*", "*"],
+          widths: ["auto", "*", "*", "*", "*", "*"],
+          body: [
+            ["#", "Name", "Dose", "When", "Frequency", "Duration"],
+            ...content.value,
+          ],
+        },
+      },
+      {
+        style: "tableExample",
+        table: {
+          widths: ["*"],
           body: [
             [
-              "#",
-              "Name",
-              "Dose",
-              "When",
-              "Frequency",
-              "Duration",
-              "Quantity",
-              "Notes",
+              "This is a star-sized column. The next column over, an auto-sized column, will wrap to accomodate all the text in this cell.",
             ],
-            ...content.value,
           ],
         },
       },

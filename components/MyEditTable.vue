@@ -25,7 +25,6 @@ const newDrug = ref({
   when: "",
   frequency: "",
   duration: "",
-  quantity: "",
   notes: "",
 })
 
@@ -37,7 +36,6 @@ const addNewDrug = () => {
     when: "",
     frequency: "",
     duration: "",
-    quantity: "",
     notes: "",
   }
   console.log(drugs)
@@ -50,8 +48,7 @@ const drugs = ref([
     when: "morning",
     frequency: "1x1",
     duration: "3 days",
-    quantity: "30",
-    notes: "hypotension",
+    notes: "",
   },
   {
     name: "Metformin",
@@ -59,14 +56,8 @@ const drugs = ref([
     when: "night",
     frequency: "2x2",
     duration: "60 days",
-    quantity: "240",
-    notes: "blood sugar",
+    notes: "",
   },
-])
-
-const rows = ref([
-  { id: 1, name: "Drug A" },
-  { id: 2, name: "Drug B" },
 ])
 
 const header = [
@@ -76,34 +67,14 @@ const header = [
   { label: "When", key: "when" },
   { label: "Frequency", key: "frequency" },
   { label: "Duration", key: "duration" },
-  { label: "Quantity", key: "quantity" },
-  { label: "Notes", key: "notes" },
 ]
 </script>
 
 <template>
   <UContainer class="mt-4">
-    <UTable v-model="selected" :rows="drugs" :columns="header">
-      <template #name-data="{ row }">
-        <span
-          :class="[
-            selected.find((person) => person === row.id) &&
-              'text-primary-500 dark:text-primary-400',
-          ]"
-          >{{ row.name }}</span
-        >
-      </template>
-
-      <!-- <template #actions-data="{ row }">
-        <UDropdown :items="items(row)">
-          <UButton
-            color="gray"
-            variant="ghost"
-            icon="i-heroicons-ellipsis-horizontal-20-solid"
-          />
-        </UDropdown>
-      </template> -->
-    </UTable>
+    <UTable v-model="selected" :rows="drugs" :columns="header"> </UTable>
+  </UContainer>
+  <UContainer class="donot">
     <UFormGroup label="New Drug">
       <div class="flex mb-4">
         <div class="mr-2">
@@ -141,17 +112,10 @@ const header = [
             :options="durationOptions"
           />
         </div>
-        <div class="">
-          <UInputMenu
-            placeholder="Quantity"
-            v-model="newDrug.quantity"
-            :options="quantityOptions"
-          />
-        </div>
       </div>
-      <div class="mb-4">
+      <!-- <div class="mb-4">
         <UTextarea placeholder="Notes" v-model="newDrug.notes" />
-      </div>
+      </div> -->
       <div>
         <UButton
           class="w-auto"
@@ -165,3 +129,11 @@ const header = [
     <MyPrint :prescription="drugs" class="mt-4" />
   </UContainer>
 </template>
+
+<style>
+@media print {
+  .donot {
+    display: none;
+  }
+}
+</style>
