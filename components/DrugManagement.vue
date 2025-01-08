@@ -15,6 +15,7 @@ const drugs = ref([
   {
     id: 1,
     name: "Amlodipine",
+    brand: "Amlodipine",
     dose: "100mg",
     when: "morning",
     frequency: "1x1",
@@ -25,6 +26,7 @@ const drugs = ref([
   {
     id: 2,
     name: "Metformin",
+    brand: "Amlodipine",
     dose: "50mg",
     when: "night",
     frequency: "2x2",
@@ -33,9 +35,11 @@ const drugs = ref([
       "This is a star-sized column. The next column over, an auto-sized column, will not wrap to accomodate all the text in this cell, because it has been given the noWrap style",
   },
 ])
-const header = ["#", "Name", "Dose", "When", "Frequency", "Duration"]
+const header = ["#", "Name", "Brand", "Dose", "When", "Frequency", "Duration"]
 
 const addNewDrug = (newDrug) => {
+  console.log(newDrug)
+
   drugs.value.push(newDrug)
 }
 </script>

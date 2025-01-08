@@ -4,8 +4,8 @@
   <div>
     <!-- <MyEditTable /> -->
     <!-- <MyTable /> -->
-    <!-- <DrugManagement /> -->
-    <CreateDrug />
+    <DrugManagement />
+    <!-- <CreateDrug /> -->
   </div>
 </template>
 

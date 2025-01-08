@@ -22,32 +22,37 @@
               <tbody class="divide-y divide-gray-200 bg-white mainTable">
                 <tr>
                   <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
                   >
                     {{ id + 1 }}
                   </td>
                   <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
                   >
                     <span>{{ drug.name }}</span>
                   </td>
                   <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
+                  >
+                    <span>{{ drug.brand }}</span>
+                  </td>
+                  <td
+                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
                   >
                     <span>{{ drug.dose }}</span>
                   </td>
                   <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
                   >
                     <span>{{ drug.when }}</span>
                   </td>
                   <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
                   >
                     <span>{{ drug.frequency }}</span>
                   </td>
                   <td
-                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
                   >
                     <span>{{ drug.duration }}</span>
                   </td>
@@ -80,5 +85,13 @@ defineProps({
 </script>
 
 <style>
-/* Add table styles here */
+tr td:first-child,
+tr th:first-child {
+  width: 5%;
+}
+tr td,
+tr th {
+  text-align: left;
+  width: 14.2%;
+}
 </style>

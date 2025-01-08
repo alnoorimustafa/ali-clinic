@@ -37,8 +37,13 @@ const resetForm = () => {
   selected.value = []
 }
 
-const parseMultilineInput = (input) =>
-  input.split("\n").filter((line) => line.trim() !== "")
+const parseMultilineInput = (input) => {
+  if (!input) {
+    return ""
+  } else {
+    return input.split("\n").filter((line) => line.trim() !== "")
+  }
+}
 
 const fetchDrugs = async () => {
   try {
@@ -47,10 +52,10 @@ const fetchDrugs = async () => {
       id: drug.id || "",
       name: drug.name || "",
       brand: drug.brand || "",
-      frequency: drug.frequency.join(", ") || "",
-      dose: drug.dose.join(", ") || "",
-      when: drug.when.join(", ") || "",
-      duration: drug.duration.join(", ") || "",
+      frequency: drug.frequency || "",
+      dose: drug.dose || "",
+      when: drug.when || "",
+      duration: drug.duration || "",
       note: drug.note || "",
     }))
   } catch (error) {
@@ -64,7 +69,7 @@ const createOrUpdateDrug = async () => {
 
   const data = {
     name: form.value.name,
-    brand: form.value.brand,
+    brand: parseMultilineInput(form.value.brand),
     frequency: parseMultilineInput(form.value.frequency),
     dose: parseMultilineInput(form.value.dose),
     when: parseMultilineInput(form.value.when),
@@ -90,7 +95,51 @@ const createOrUpdateDrug = async () => {
   }
 }
 
+const formatRowValue = (value) => {
+  if (!value) return "" // Handle empty or undefined values
+
+  if (Array.isArray(value)) {
+    // If it's an array, join elements with a newline
+    return value.map((item) => item.trim()).join("\n")
+  }
+
+  if (typeof value === "string") {
+    // Handle strings: split by comma if present, else return trimmed value
+    return value.includes(",")
+      ? value
+          .split(",")
+          .map((item) => item.trim())
+          .join("\n")
+      : value.trim()
+  }
+
+  // For unexpected types, return as a string
+  return String(value)
+}
+// const handleTableChange = (row) => {
+//   console.log(row)
+
+//   if (selected.value.length === 1) {
+//     editing.value = false
+//     resetForm()
+//   } else {
+//     editing.value = true
+//     form.value = {
+//       id: row.id || "",
+//       name: row.name || "",
+//       brand: row.brand || "",
+//       frequency: row.frequency || "",
+//       dose: row.dose || "",
+//       when: row.when || "",
+//       duration: row.duration || "",
+//       note: row.note || "",
+//     }
+//   }
+// }
+
 const handleTableChange = (row) => {
+  console.log(row)
+
   if (selected.value.length === 1) {
     editing.value = false
     resetForm()
@@ -98,13 +147,13 @@ const handleTableChange = (row) => {
     editing.value = true
     form.value = {
       id: row.id || "",
-      name: row.name || "",
-      brand: row.brand || "",
-      frequency: row.frequency || "",
-      dose: row.dose || "",
-      when: row.when || "",
-      duration: row.duration || "",
-      note: row.note || "",
+      name: formatRowValue(row.name),
+      brand: formatRowValue(row.brand),
+      frequency: formatRowValue(row.frequency),
+      dose: formatRowValue(row.dose),
+      when: formatRowValue(row.when),
+      duration: formatRowValue(row.duration),
+      note: formatRowValue(row.note),
     }
   }
 }
@@ -114,82 +163,83 @@ onMounted(fetchDrugs)
 
 <template>
   <UContainer class="my-10">
-    <h1 class="text-xl font-semibold mb-4">
-      {{ editing ? "Edit Drug" : "Add New Drug" }}
-    </h1>
+    <div class="grid grid-cols-3 gap-6">
+      <div class="col-span-1 max-w-lg">
+        <h1 class="text-xl font-semibold mb-4">
+          {{ editing ? "Edit Drug" : "Add New Drug" }}
+        </h1>
 
-    <form @submit.prevent="createOrUpdateDrug">
-      <div
-        v-for="(label, key) in {
-          name: 'Drug Name',
-          brand: 'Brand',
-          frequency: 'Frequency',
-          dose: 'Dose',
-          when: 'When to Take',
-          duration: 'Duration',
-          note: 'Note',
-        }"
-        :key="key"
-        class="form-group mb-4"
-      >
-        <label :for="key" class="block text-sm font-medium text-gray-700">{{
-          label
-        }}</label>
-        <textarea
-          v-if="key !== 'name'"
-          v-model="form[key]"
-          :id="key"
-          class="textarea"
-          :placeholder="`Enter ${label.toLowerCase()} (one per line)`"
-        ></textarea>
-        <input
-          v-else
-          v-model="form[key]"
-          :id="key"
-          type="text"
-          class="input"
-          :placeholder="`Enter ${label.toLowerCase()}`"
-          required
+        <form @submit.prevent="createOrUpdateDrug">
+          <div
+            v-for="(label, key) in {
+              name: 'Name',
+              brand: 'Brand',
+              frequency: 'Frequency',
+              dose: 'Dose',
+              when: 'When to Take',
+              duration: 'Duration',
+              note: 'Note',
+            }"
+            :key="key"
+            class="form-group mb-4"
+          >
+            <label
+              :for="key"
+              class="block mb-2 text-sm font-medium text-gray-700"
+              >{{ label }}</label
+            >
+            <UTextarea
+              autoresize
+              v-if="key !== 'name'"
+              v-model="form[key]"
+              :id="key"
+              class="textarea"
+              :placeholder="`Enter ${label.toLowerCase()} (one per line)`"
+            />
+            <UInput
+              v-else
+              v-model="form[key]"
+              :id="key"
+              type="text"
+              class="input"
+              :placeholder="`Enter ${label.toLowerCase()}`"
+              required
+            />
+          </div>
+
+          <div v-if="errorMessage" class="text-red-500 mb-4">
+            {{ errorMessage }}
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+            :disabled="isSubmitting"
+          >
+            {{
+              isSubmitting
+                ? "Submitting..."
+                : editing
+                ? "Update Drug"
+                : "Create Drug"
+            }}
+          </button>
+        </form>
+      </div>
+      <div class="col-span-2">
+        <UTable
+          v-model="selected"
+          :rows="drugs"
+          class="w-full border rounded"
+          :single-select="true"
+          @select="handleTableChange"
         />
       </div>
-
-      <div v-if="errorMessage" class="text-red-500 mb-4">
-        {{ errorMessage }}
-      </div>
-
-      <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
-        {{
-          isSubmitting
-            ? "Submitting..."
-            : editing
-            ? "Update Drug"
-            : "Create Drug"
-        }}
-      </button>
-    </form>
-  </UContainer>
-
-  <UDivider class="my-10" />
-
-  <UContainer class="my-10">
-    <UTable
-      v-model="selected"
-      :rows="drugs"
-      class="w-full"
-      :single-select="true"
-      @select="handleTableChange"
-    />
+    </div>
   </UContainer>
 </template>
 
 <style scoped>
-.input,
-.textarea {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-}
 .btn {
   background-color: #2563eb;
   color: #fff;
