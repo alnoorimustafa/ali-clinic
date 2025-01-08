@@ -1,38 +1,17 @@
 <template>
-  <div class="px-4 sm:px-6 lg:px-8 mt-10">
-    <!-- header  -->
-    <div class="sm:flex sm:items-center">
-      <!-- title and description -->
-      <div class="sm:flex-auto">
-        <h1 class="text-base font-semibold leading-6 text-white">Users</h1>
-        <p class="mt-2 text-sm text-gray-200">
-          A list of all drugs for this patient.
-        </p>
-      </div>
-      <!-- add user -->
-      <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-        <button
-          @click="isOpen = true"
-          type="button"
-          class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          Add user
-        </button>
-      </div>
-    </div>
+  <UContainer>
     <!-- table -->
     <div class="mt-8 flow-root">
       <div class="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
           <div class="shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-300">
+            <table class="min-w-full divide-y divide-gray-300 header-table">
               <thead class="bg-gray-50">
                 <tr>
                   <th
-                    v-once
                     v-for="item in header"
                     scope="col"
-                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 border"
+                    class="whitespace-nowrap py-4 pl-2 pr-3 text-sm font-medium text-gray-900"
                   >
                     {{ item }}
                   </th>
@@ -40,7 +19,7 @@
               </thead>
             </table>
             <div v-for="(drug, id) in drugs" :key="drug.name">
-              <table class="min-w-full divide-y divide-gray-300">
+              <table class="min-w-full divide-y divide-gray-300 row-table">
                 <tbody class="divide-y divide-gray-200 bg-white mainTable">
                   <tr>
                     <td
@@ -51,16 +30,12 @@
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
                     >
-                      <span>
-                        {{ drug.name }}
-                      </span>
+                      <span>{{ drug.name }}</span>
                     </td>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 bg-slate-600"
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
                     >
-                      <span>
-                        {{ drug.dose }}
-                      </span>
+                      <span>{{ drug.dose }}</span>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
@@ -77,11 +52,6 @@
                     >
                       <span>{{ drug.duration }}</span>
                     </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                    >
-                      <span>{{ drug.quantity }}</span>
-                    </td>
                   </tr>
                   <tr>
                     <td colspan="6" class="notes-row p-4">
@@ -95,39 +65,72 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="container flex flex-col items-center justify-center">
-    <UFormGroup label="New Drug">
-      <UInputMenu class="mb-2" v-model="newDrug.name" :options="drugOptions" />
-      <UInputMenu class="mb-2" v-model="newDrug.dose" :options="doseOptions" />
-      <UInputMenu class="mb-2" v-model="newDrug.when" :options="whenOptions" />
-      <UInputMenu
-        class="mb-2"
-        v-model="newDrug.frequency"
-        :options="frequencyOptions"
-      />
-      <UInputMenu
-        class="mb-2"
-        v-model="newDrug.duration"
-        :options="durationOptions"
-      />
-      <UInputMenu
-        class="mb-2"
-        v-model="newDrug.quantity"
-        :options="quantityOptions"
-      />
-      <UTextarea class="mb-2" v-model="newDrug.note" />
-      <UButton class="w-auto" label="Add" color="primary" @click="addNewDrug" />
-    </UFormGroup>
-    <MyPrint :prescription="drugs" />
-  </div>
-</template>
+  </UContainer>
 
-<style></style>
+  <!-- divider -->
+  <UDivider class="my-10" />
+
+  <!-- form -->
+  <UContainer class="print">
+    <!-- Add New Drug Form -->
+    <UFormGroup label="New Drug">
+      <div class="flex mb-4">
+        <div class="mr-2">
+          <UInputMenu
+            placeholder="Name"
+            v-model="newDrug.name"
+            :options="drugOptions"
+          />
+        </div>
+        <div class="mr-2">
+          <UInputMenu
+            placeholder="Dose"
+            v-model="newDrug.dose"
+            :options="doseOptions"
+          />
+        </div>
+        <div class="mr-2">
+          <UInputMenu
+            placeholder="When"
+            v-model="newDrug.when"
+            :options="whenOptions"
+          />
+        </div>
+        <div class="mr-2">
+          <UInputMenu
+            placeholder="Frequency"
+            v-model="newDrug.frequency"
+            :options="frequencyOptions"
+          />
+        </div>
+        <div class="mr-2">
+          <UInputMenu
+            placeholder="Duration"
+            v-model="newDrug.duration"
+            :options="durationOptions"
+          />
+        </div>
+      </div>
+      <div class="mb-4">
+        <UTextarea placeholder="Notes" v-model="newDrug.notes" />
+      </div>
+      <div>
+        <UButton
+          class="w-auto"
+          label="Add"
+          color="primary"
+          @click="addNewDrug"
+        />
+      </div>
+    </UFormGroup>
+    <UDivider class="my-4" />
+  </UContainer>
+</template>
 
 <script setup>
 const isOpen = ref(false)
 const selected = ref([])
+
 const drugOptions = [
   "Amlodipine",
   "Metformin",
@@ -170,6 +173,7 @@ const addNewDrug = () => {
 
 const drugs = ref([
   {
+    id: 1,
     name: "Amlodipine",
     dose: "100mg",
     when: "morning",
@@ -179,6 +183,7 @@ const drugs = ref([
       "This is a star-sized column. The next column over, an auto-sized column, will not wrap to accomodate all the text in this cell, because it has been given the noWrap style",
   },
   {
+    id: 2,
     name: "Metformin",
     dose: "50mg",
     when: "night",
@@ -189,4 +194,50 @@ const drugs = ref([
   },
 ])
 const header = ["#", "Name", "Dose", "When", "Frequency", "Duration"]
+
+const dDrugs = [
+  {
+    id: 1,
+    name: "Gabapentin",
+    dose: ["100mg", "300mg", "600mg"],
+    when: ["once a day", "twice a day", "three times a day"],
+    frequency: ["1x1", "2x2", "3x3"],
+    duration: ["1 day", "2 days", "3 days"],
+    notes: [
+      "كبسولة واحدة ليلا قبل النوم",
+      "كبسولة واحدة ليلا قبل النوم",
+      "كبسولة واحدة ليلا قبل النوم",
+    ],
+  },
+]
 </script>
+
+<style>
+/* Ensure consistent column widths */
+.header-table th,
+.row-table td {
+  width: 14.28%; /* Divide 100% by 7 columns for equal spacing */
+  text-align: left;
+}
+
+.header-table th:first-child,
+.row-table td:first-child {
+  width: 5%; /* Adjust width for the first column */
+  text-align: left;
+}
+
+/* Optional styling for better visuals */
+.header-table th {
+  background-color: #f9fafb;
+}
+
+.row-table td {
+  padding: 8px;
+}
+
+@media print {
+  .print {
+    display: none;
+  }
+}
+</style>

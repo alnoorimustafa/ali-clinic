@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MyEditTable />
+    <!-- <MyEditTable /> -->
     <MyTable />
   </div>
 </template>
