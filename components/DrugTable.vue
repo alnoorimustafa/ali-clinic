@@ -10,9 +10,9 @@
                   v-for="item in header"
                   :key="item"
                   scope="col"
-                  class="whitespace-nowrap py-4 pl-2 pr-3 text-sm font-medium text-gray-900"
+                  class="py-4 pl-2 pr-3 text-sm font-medium text-gray-900"
                 >
-                  {{ item }}
+                  <span>{{ item }}</span>
                 </th>
               </tr>
             </thead>
@@ -21,45 +21,33 @@
             <table class="min-w-full divide-y divide-gray-300 row-table">
               <tbody class="divide-y divide-gray-200 bg-white mainTable">
                 <tr>
-                  <td
-                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
-                  >
+                  <td class="py-2 pl-2 text-sm font-medium text-gray-900">
                     {{ id + 1 }}
                   </td>
-                  <td
-                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
-                  >
+                  <td class="py-2 pl-2 text-sm font-medium text-gray-900">
                     <span>{{ drug.name }}</span>
                   </td>
-                  <td
-                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
-                  >
+                  <td class="py-2 pl-2 text-sm font-medium text-gray-900">
                     <span>{{ drug.brand }}</span>
                   </td>
-                  <td
-                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
-                  >
+                  <td class="py-2 pl-2 text-sm font-medium text-gray-900">
                     <span>{{ drug.dose }}</span>
                   </td>
-                  <td
-                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
-                  >
+                  <td class="py-2 pl-2 text-sm font-medium text-gray-900">
                     <span>{{ drug.when }}</span>
                   </td>
-                  <td
-                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
-                  >
+                  <td class="py-2 pl-2 text-sm font-medium text-gray-900">
                     <span>{{ drug.frequency }}</span>
                   </td>
-                  <td
-                    class="whitespace-nowrap py-2 pl-2 text-sm font-medium text-gray-900"
-                  >
+                  <td class="py-2 pl-2 text-sm font-medium text-gray-900">
                     <span>{{ drug.duration }}</span>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="6" class="notes-row p-4">
-                    {{ drug.notes }}
+                    <div class="text-sm text-right">
+                      {{ drug.notes }}
+                    </div>
                   </td>
                 </tr>
               </tbody>
@@ -88,10 +76,17 @@ defineProps({
 tr td:first-child,
 tr th:first-child {
   width: 5%;
+  max-width: 5%;
 }
 tr td,
 tr th {
   text-align: left;
   width: 14.2%;
+  max-width: 14.2%;
+}
+tr td span,
+tr th span {
+  word-wrap: break-word;
+  white-space: normal;
 }
 </style>

@@ -76,7 +76,7 @@ const createOrUpdateDrug = async () => {
     dose: parseMultilineInput(form.value.dose),
     when: parseMultilineInput(form.value.when),
     duration: parseMultilineInput(form.value.duration),
-    note: form.value.note,
+    note: parseMultilineInput(form.value.note),
   }
 
   try {
@@ -115,29 +115,8 @@ const formatRowValue = (value) => {
       : value.trim()
   }
 
-  // For unexpected types, return as a string
   return String(value)
 }
-// const handleTableChange = (row) => {
-//   console.log(row)
-
-//   if (selected.value.length === 1) {
-//     editing.value = false
-//     resetForm()
-//   } else {
-//     editing.value = true
-//     form.value = {
-//       id: row.id || "",
-//       name: row.name || "",
-//       brand: row.brand || "",
-//       frequency: row.frequency || "",
-//       dose: row.dose || "",
-//       when: row.when || "",
-//       duration: row.duration || "",
-//       note: row.note || "",
-//     }
-//   }
-// }
 
 const handleTableChange = (row) => {
   console.log(row)

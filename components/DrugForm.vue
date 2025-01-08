@@ -17,6 +17,7 @@
       <!-- brand -->
       <div class="ml-2">
         <UInputMenu
+          :nullable="true"
           v-if="selected && selected.brand"
           placeholder="Brand"
           v-model="selectedBrand"
@@ -27,6 +28,7 @@
       <!-- doses -->
       <div class="ml-2">
         <UInputMenu
+          :nullable="true"
           v-if="selected && selected.dose"
           placeholder="Dose"
           v-model="selectedDose"
@@ -37,6 +39,7 @@
       <!-- when -->
       <div class="ml-2">
         <UInputMenu
+          :nullable="true"
           v-if="selected && selected.when"
           placeholder="When"
           v-model="selectedWhen"
@@ -47,6 +50,7 @@
       <!-- frequency -->
       <div class="ml-2">
         <UInputMenu
+          :nullable="true"
           v-if="selected && selected.frequency"
           placeholder="Frequency"
           v-model="selectedFrequency"
@@ -57,6 +61,7 @@
       <!-- duration -->
       <div class="ml-2">
         <UInputMenu
+          :nullable="true"
           v-if="selected && selected.duration"
           placeholder="Duration"
           v-model="selectedDuration"
@@ -68,10 +73,11 @@
     <!-- notes -->
     <div class="mb-4">
       <UInputMenu
+        :nullable="true"
         v-if="selected && selected.note"
         placeholder="Note"
         v-model="selectedNote"
-        :options="[selected.note]"
+        :options="selected.note"
       />
       <UInputMenu v-else placeholder="Note" disabled="" />
     </div>
@@ -119,6 +125,7 @@ const submitForm = () => {
 }
 
 const changed = async (e) => {
+  console.log(e)
   selected.value = e
   selectedFrequency.value = null
   selectedBrand.value = null
