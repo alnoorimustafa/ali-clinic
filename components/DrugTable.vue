@@ -17,14 +17,14 @@
               </tr>
             </thead>
           </table>
-          <div v-for="(drug, id) in drugs" :key="drug.name">
+          <div v-for="(drug, index) in drugs" :key="drug.name">
             <UDivider size="sm" />
 
             <table class="min-w-full row-table">
               <tbody class="bg-white mainTable">
-                <tr>
+                <tr @click="emitDeleteDrug(index)" class="cursor-pointer">
                   <td class="py-2 pl-2 text-sm font-medium text-gray-900">
-                    {{ id + 1 }}
+                    {{ index + 1 }}
                   </td>
                   <td class="py-2 pl-2 text-sm font-medium text-gray-900">
                     <span>{{ drug.name }}</span>
@@ -63,6 +63,12 @@
 </template>
 
 <script setup>
+// Emit function to notify parent component
+const emit = defineEmits(["deleteDrug"])
+const emitDeleteDrug = (index) => {
+  emit("deleteDrug", index)
+}
+
 defineProps({
   drugs: {
     type: Array,

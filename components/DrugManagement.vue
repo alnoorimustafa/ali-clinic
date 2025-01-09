@@ -13,7 +13,9 @@
         <p>التاريخ: {{ new Intl.DateTimeFormat("en-GB").format(date) }}</p>
       </div>
     </div>
-    <DrugTable :drugs="drugs" :header="header" />
+
+    <DrugTable :drugs="drugs" :header="header" @deleteDrug="deleteDrug" />
+
     <div class="print">
       <UDivider class="my-10" />
       <div class="flex flex-row gap-4 mb-10">
@@ -49,6 +51,10 @@ const addNewDrug = (newDrug) => {
   console.log(newDrug)
 
   drugs.value.push(newDrug)
+}
+
+const deleteDrug = (index) => {
+  drugs.value.splice(index, 1)
 }
 </script>
 

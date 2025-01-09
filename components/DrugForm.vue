@@ -18,7 +18,7 @@
       <div class="ml-2">
         <UInputMenu
           :nullable="true"
-          v-if="selected && selected.brand"
+          v-if="selected"
           placeholder="Brand"
           v-model="selectedBrand"
           :options="selected.brand"
@@ -29,7 +29,7 @@
       <div class="ml-2">
         <UInputMenu
           :nullable="true"
-          v-if="selected && selected.dose"
+          v-if="selected"
           placeholder="Dose"
           v-model="selectedDose"
           :options="selected.dose"
@@ -40,7 +40,7 @@
       <div class="ml-2">
         <UInputMenu
           :nullable="true"
-          v-if="selected && selected.when"
+          v-if="selected"
           placeholder="When"
           v-model="selectedWhen"
           :options="selected.when"
@@ -51,7 +51,7 @@
       <div class="ml-2">
         <UInputMenu
           :nullable="true"
-          v-if="selected && selected.frequency"
+          v-if="selected"
           placeholder="Frequency"
           v-model="selectedFrequency"
           :options="selected.frequency"
@@ -62,7 +62,7 @@
       <div class="ml-2">
         <UInputMenu
           :nullable="true"
-          v-if="selected && selected.duration"
+          v-if="selected"
           placeholder="Duration"
           v-model="selectedDuration"
           :options="selected.duration"
@@ -74,7 +74,7 @@
     <div class="mb-4">
       <UInputMenu
         :nullable="true"
-        v-if="selected && selected.note"
+        v-if="selected"
         placeholder="Note"
         v-model="selectedNote"
         :options="selected.note"
@@ -102,9 +102,6 @@ const selectedNote = ref(null)
 const loading = ref(false)
 
 const submitForm = () => {
-  console.log(selectedName)
-  console.log(selectedName.value)
-
   const drugToAdd = {
     name: selected.value.name,
     brand: selectedBrand.value,
@@ -125,7 +122,6 @@ const submitForm = () => {
 }
 
 const changed = async (e) => {
-  console.log(e)
   selected.value = e
   selectedFrequency.value = null
   selectedBrand.value = null
@@ -146,7 +142,6 @@ async function search(q) {
       return []
     }
     loading.value = false
-    console.log(users.items[0])
 
     selected.value = users.items[0]
 
