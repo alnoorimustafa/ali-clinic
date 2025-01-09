@@ -139,6 +139,16 @@ const handleTableChange = (row) => {
   }
 }
 
+const deleteDrug = async () => {
+  try {
+    await pb.collection("drugs").delete(form.value.id)
+    fetchDrugs()
+    resetForm()
+  } catch (error) {
+    console.error("Error deleting drug:", error)
+  }
+}
+
 onMounted(fetchDrugs)
 </script>
 
@@ -195,9 +205,9 @@ onMounted(fetchDrugs)
             {{ errorMessage }}
           </div>
 
-          <button
+          <UButton
             type="submit"
-            class="btn btn-primary"
+            class="bg-primary mr-4"
             :disabled="isSubmitting"
           >
             {{
@@ -207,7 +217,16 @@ onMounted(fetchDrugs)
                 ? "Update Drug"
                 : "Create Drug"
             }}
-          </button>
+          </UButton>
+          <UButton
+            v-if="editing"
+            type="submit"
+            class="bg-red-700"
+            :disabled="isSubmitting"
+            @click="deleteDrug"
+          >
+            Delete Drug
+          </UButton>
         </form>
       </div>
       <div class="col-span-2">

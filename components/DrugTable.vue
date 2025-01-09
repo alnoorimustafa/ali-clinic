@@ -18,8 +18,10 @@
             </thead>
           </table>
           <div v-for="(drug, id) in drugs" :key="drug.name">
-            <table class="min-w-full divide-y divide-gray-300 row-table">
-              <tbody class="divide-y divide-gray-200 bg-white mainTable">
+            <UDivider size="sm" />
+
+            <table class="min-w-full row-table">
+              <tbody class="bg-white mainTable">
                 <tr>
                   <td class="py-2 pl-2 text-sm font-medium text-gray-900">
                     {{ id + 1 }}
@@ -43,8 +45,9 @@
                     <span>{{ drug.duration }}</span>
                   </td>
                 </tr>
-                <tr>
-                  <td colspan="6" class="notes-row p-4">
+
+                <tr class="">
+                  <td colspan="6" class="notes-row p-1">
                     <div class="text-sm text-right">
                       {{ drug.notes }}
                     </div>
@@ -88,5 +91,9 @@ tr td span,
 tr th span {
   word-wrap: break-word;
   white-space: normal;
+}
+
+tr td span {
+  font-weight: 600;
 }
 </style>
