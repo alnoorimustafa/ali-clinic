@@ -1,0 +1,1 @@
+tr td:first-child,tr th:first-child{max-width:5%;width:5%}tr td,tr th{max-width:14.2%;text-align:left;width:14.2%}tr td span,tr th span{word-wrap:break-word;white-space:normal}tr td span{font-weight:600}@media print{.print{display:none}}
