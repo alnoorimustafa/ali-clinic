@@ -41,7 +41,7 @@
         <div class="sm:flex-auto">
           <h1 class="text-base font-semibold leading-6 text-gray-900">Drugs</h1>
           <p class="mt-2 text-sm text-gray-700">
-            A list of prescriptions for the patient.
+            A list of drugs for the prescription
           </p>
         </div>
         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -61,53 +61,56 @@
           <div
             class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
           >
-            <table class="min-w-full border rounded divide-y divide-gray-300">
+            <table class="min-w-full border divide-y divide-gray-300">
               <!-- Header -->
               <thead class="bg-white">
                 <tr>
                   <th
                     scope="col"
-                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
+                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
                   >
                     #
                   </th>
                   <th
                     scope="col"
-                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
+                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
                   >
                     Name
                   </th>
                   <th
                     scope="col"
-                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
                   >
                     Brand
                   </th>
                   <th
                     scope="col"
-                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
                   >
                     Dose
                   </th>
                   <th
                     scope="col"
-                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
                   >
                     When
                   </th>
                   <th
                     scope="col"
-                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
                   >
                     Frequency
                   </th>
                   <th
                     scope="col"
-                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
                   >
                     Duration
                   </th>
-                  <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-3">
+                  <th
+                    scope="col"
+                    class="relative py-3.5 pl-3 pr-4 sm:pr-3 print-hide"
+                  >
                     <span class="sr-only">Edit</span>
                   </th>
                 </tr>
@@ -123,29 +126,29 @@
                       'border-t ',
                     ]"
                   >
-                    <td class="px-4 py-4 text-sm text-gray-900">
+                    <td class="px-4 pt-2 text-sm">
                       {{ index + 1 }}
                     </td>
-                    <td class="px-4 py-4 text-sm font-medium text-gray-900">
+                    <td class="px-4 pt-2 text-sm font-medium">
                       {{ drug.name }}
                     </td>
-                    <td class="px-4 py-4 text-sm text-gray-500">
+                    <td class="px-4 pt-2 text-sm">
                       {{ drug.brand }}
                     </td>
-                    <td class="px-4 py-4 text-sm text-gray-500">
+                    <td class="px-4 pt-2 text-sm">
                       {{ drug.dose }}
                     </td>
-                    <td class="px-4 py-4 text-sm text-gray-500">
+                    <td class="px-4 pt-2 text-sm">
                       {{ drug.when }}
                     </td>
-                    <td class="px-4 py-4 text-sm text-gray-500">
+                    <td class="px-4 pt-2 text-sm">
                       {{ drug.frequency }}
                     </td>
-                    <td class="px-4 py-4 text-sm text-gray-500">
+                    <td class="px-4 pt-2 text-sm">
                       {{ drug.duration }}
                     </td>
                     <td
-                      class="relative py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3"
+                      class="relative pt-2 px-4 text-right text-sm font-medium sm:pr-3 print-hide"
                     >
                       <a
                         @click.prevent="openModal('edit', drug)"
@@ -159,7 +162,7 @@
                   <tr class="" v-if="drug.note">
                     <td
                       colspan="12"
-                      class="py-2 pl-4 pr-3 text-sm font-semibold text-gray-900 sm:pl-3 border-b-4 text-center"
+                      class="px-2 py-2 text-sm font-semibold text-gray-900 sm:pl-3 border-b-4 text-center"
                     >
                       {{ drug.note }}
                     </td>
@@ -479,20 +482,18 @@ const changed = async (e) => {
 </script>
 
 <style>
-/*
-tr td:first-child,
-tr th:first-child {
-  width: 5%;
-  max-width: 5%;
-}
-
-/*
 tr td,
 tr th {
   text-align: left;
-  width: 14.2%;
-  max-width: 14.2%;
-} 
+  width: 20%;
+  min-width: 13%;
+}
+
+tr td:first-child,
+tr th:first-child {
+  width: 3%;
+  min-width: 3%;
+}
 
 tr td span,
 tr th span {
@@ -502,7 +503,7 @@ tr th span {
 
 tr td span {
   font-weight: 600;
-}*/
+}
 
 .print-show {
   display: none;
