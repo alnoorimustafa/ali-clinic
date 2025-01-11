@@ -123,32 +123,33 @@
                   <tr
                     :class="[
                       index === 0 ? 'border-gray-300' : 'border-gray-200',
-                      'border-t ',
+                      'border-t',
                     ]"
+                    class=""
                   >
-                    <td class="px-4 pt-2 text-sm">
+                    <td class="px-4 py-2 text-sm">
                       {{ index + 1 }}
                     </td>
-                    <td class="px-4 pt-2 text-sm font-medium">
+                    <td class="px-4 py-2 text-sm font-medium">
                       {{ drug.name }}
                     </td>
-                    <td class="px-4 pt-2 text-sm">
+                    <td class="px-4 py-2 text-sm">
                       {{ drug.brand }}
                     </td>
-                    <td class="px-4 pt-2 text-sm">
+                    <td class="px-4 py-2 text-sm">
                       {{ drug.dose }}
                     </td>
-                    <td class="px-4 pt-2 text-sm">
+                    <td class="px-4 py-2 text-sm">
                       {{ drug.when }}
                     </td>
-                    <td class="px-4 pt-2 text-sm">
+                    <td class="px-4 py-2 text-sm">
                       {{ drug.frequency }}
                     </td>
-                    <td class="px-4 pt-2 text-sm">
+                    <td class="px-4 py-2 text-sm">
                       {{ drug.duration }}
                     </td>
                     <td
-                      class="relative pt-2 px-4 text-right text-sm font-medium sm:pr-3 print-hide"
+                      class="relative py-2 px-4 text-right text-sm font-medium sm:pr-3 print-hide"
                     >
                       <a
                         @click.prevent="openModal('edit', drug)"
@@ -191,7 +192,19 @@
               @input="handleInput($event, 'name')"
               v-model="createdDrug.name"
               placeholder="Name"
-            />
+            >
+              <template #option-empty="{ query }">
+                <span>{{ fetchedDrug.name }}</span>
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('name', createdDrug.name)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" />
+                  </template>
+                </UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">Brand</p>
@@ -203,7 +216,17 @@
               v-model="createdDrug.brand"
               @input="handleInput($event, 'brand')"
               placeholder="Brand"
-            />
+            >
+              <template #option-empty="{ query }">
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('brand', createdDrug.brand)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" /> </template
+                ></UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">Dosage</p>
@@ -213,7 +236,17 @@
               v-model="createdDrug.dose"
               @input="handleInput($event, 'dose')"
               placeholder="Dosage"
-            />
+            >
+              <template #option-empty="{ query }">
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('dose', createdDrug.dose)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" /> </template
+                ></UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">When</p>
@@ -224,7 +257,17 @@
               @input="handleInput($event, 'when')"
               v-model="createdDrug.when"
               placeholder="When"
-            />
+            >
+              <template #option-empty="{ query }">
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('when', createdDrug.when)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" /> </template
+                ></UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">Frequency</p>
@@ -235,7 +278,17 @@
               @input="handleInput($event, 'frequency')"
               v-model="createdDrug.frequency"
               placeholder="Frequency"
-            />
+            >
+              <template #option-empty="{ query }">
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('frequency', createdDrug.frequency)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" /> </template
+                ></UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">Duration</p>
@@ -246,7 +299,17 @@
               @input="handleInput($event, 'duration')"
               v-model="createdDrug.duration"
               placeholder="Duration"
-            />
+            >
+              <template #option-empty="{ query }">
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('duration', createdDrug.duration)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" /> </template
+                ></UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">Note</p>
@@ -257,7 +320,17 @@
               @input="handleInput($event, 'note')"
               v-model="createdDrug.note"
               placeholder="Note"
-            />
+            >
+              <template #option-empty="{ query }">
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('note', createdDrug.note)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" /> </template
+                ></UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mt-4">
             <UButton class="mr-4" @click="addDrug">Save</UButton>
@@ -290,13 +363,23 @@
           <div class="mb-4">
             <p class="text-sm mb-2">Brand</p>
             <UInputMenu
-              searchable
               :options="fetchedDrug.brand"
               nullable
-              v-model.query="selectedDrug.brand"
               v-model="selectedDrug.brand"
               placeholder="Brand"
-            />
+              @input="selectedDrug.brand = $event.target.value"
+            >
+              <template #option-empty="{ query }">
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('brand', selectedDrug.brand)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" />
+                  </template>
+                </UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">Dose</p>
@@ -307,7 +390,19 @@
               v-model.query="selectedDrug.dose"
               v-model="selectedDrug.dose"
               placeholder="Dose"
-            />
+              @input="selectedDrug.dose = $event.target.value"
+            >
+              <template #option-empty="{ query }">
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('dose', selectedDrug.dose)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" />
+                  </template>
+                </UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">When</p>
@@ -318,7 +413,19 @@
               v-model.query="selectedDrug.when"
               v-model="selectedDrug.when"
               placeholder="When"
-            />
+              @input="selectedDrug.when = $event.target.value"
+            >
+              <template #option-empty="{ query }">
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('when', selectedDrug.when)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" />
+                  </template>
+                </UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">Frequency</p>
@@ -329,7 +436,19 @@
               v-model.query="selectedDrug.frequency"
               v-model="selectedDrug.frequency"
               placeholder="Frequency"
-            />
+              @input="selectedDrug.frequency = $event.target.value"
+            >
+              <template #option-empty="{ query }">
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('frequency', selectedDrug.frequency)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" />
+                  </template>
+                </UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">Duration</p>
@@ -340,7 +459,19 @@
               v-model.query="selectedDrug.duration"
               v-model="selectedDrug.duration"
               placeholder="Duration"
-            />
+              @input="selectedDrug.duration = $event.target.value"
+            >
+              <template #option-empty="{ query }">
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('Duration', selectedDrug.duration)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" />
+                  </template>
+                </UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">Note</p>
@@ -351,7 +482,19 @@
               v-model.query="selectedDrug.note"
               v-model="selectedDrug.note"
               placeholder="Note"
-            />
+              @input="selectedDrug.note = $event.target.value"
+            >
+              <template #option-empty="{ query }">
+                <UButton
+                  :loading="newLoading"
+                  @click="createNew('Note', selectedDrug.note)"
+                >
+                  <template #leading v-if="!newLoading">
+                    <UIcon name="i-heroicons-plus" class="w-5 h-5" />
+                  </template>
+                </UButton>
+              </template>
+            </UInputMenu>
           </div>
           <div class="mt-4 flex flex-row justify-between">
             <div>
@@ -371,18 +514,29 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
 import { format } from "date-fns"
 
+import PocketBase from "pocketbase"
+const pb = new PocketBase("https://mcq-db.dakakean.com")
+
 const date = ref(new Date())
+const newLoading = ref(false)
 const editModalOpen = ref(false)
 const createModalOpen = ref(false)
 const selectedDrug = ref({})
 const patientName = ref("")
 const patientAge = ref("")
 const loading = ref(false)
-const fetchedDrug = ref({})
-const createdDrugDose = ref("")
+const fetchedDrug = ref({
+  name: "",
+  brand: [],
+  frequency: [],
+  dose: [],
+  duration: [],
+  when: [],
+  note: [],
+})
+
 const createdDrug = ref({
   name: "",
   brand: "",
@@ -392,6 +546,32 @@ const createdDrug = ref({
   when: "",
   note: "",
 })
+
+const createNew = async (itemType, newItem) => {
+  if (!newItem) return
+  newLoading.value = true
+  if (itemType === "name") {
+    const newDrug = await pb.collection("drugs").create({ name: newItem })
+    fetchedDrug.value = newDrug
+  } else if (!fetchedDrug.value[itemType]) {
+    const newDrug = await pb
+      .collection("drugs")
+      .update(fetchedDrug.value.id, { [itemType]: [newItem] })
+    fetchedDrug.value = newDrug
+  } else {
+    try {
+      const updatedData = {
+        ...fetchedDrug.value,
+        [itemType]: [...fetchedDrug.value[itemType], newItem],
+      }
+      await pb.collection("drugs").update(fetchedDrug.value.id, updatedData)
+      fetchedDrug.value = updatedData
+    } catch (error) {
+      console.error("Error creating new item:", error)
+    }
+  }
+  newLoading.value = false
+}
 
 const handleInput = (event, inputName) => {
   // Update the v-model when the user enters a custom value
@@ -434,13 +614,12 @@ const saveEdit = () => {
   )
 
   if (index !== -1) {
-    // Update the existing drug
-
     drugs.value.splice(index, 1, { ...selectedDrug.value })
   } else {
-    // Add a new drug
     drugs.value.push({ ...selectedDrug.value })
   }
+
+  console.log(drugs.value)
 
   // Close the modal
   editModalOpen.value = false
@@ -468,6 +647,7 @@ async function search(q) {
       `https://mcq-db.dakakean.com/api/collections/drugs/records?filter=name~"${q}"&expand=doses,frequency`
     )
     loading.value = false
+
     return response.items
   } catch (error) {
     console.error(error)
