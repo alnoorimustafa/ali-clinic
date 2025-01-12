@@ -133,19 +133,19 @@
                     <td class="px-4 py-2 text-sm font-medium">
                       {{ drug.name }}
                     </td>
-                    <td class="px-4 py-2 text-sm">
+                    <td class="px-4 py-2 text-sm font-medium">
                       {{ drug.brand }}
                     </td>
-                    <td class="px-4 py-2 text-sm">
+                    <td class="px-4 py-2 text-sm font-medium">
                       {{ drug.dose }}
                     </td>
-                    <td class="px-4 py-2 text-sm">
+                    <td class="px-4 py-2 text-sm font-medium">
                       {{ drug.when }}
                     </td>
-                    <td class="px-4 py-2 text-sm">
+                    <td class="px-4 py-2 text-sm font-medium">
                       {{ drug.frequency }}
                     </td>
-                    <td class="px-4 py-2 text-sm">
+                    <td class="px-4 py-2 text-sm font-medium">
                       {{ drug.duration }}
                     </td>
                     <td
@@ -656,6 +656,24 @@ async function search(q) {
 }
 
 const changed = async (e) => {
+  if (e.brand.length === 1) {
+    createdDrug.value.brand = e.brand[0]
+  }
+  if (e.dose.length === 1) {
+    createdDrug.value.dose = e.dose[0]
+  }
+  if (e.when.length === 1) {
+    createdDrug.value.when = e.when[0]
+  }
+  if (e.frequency.length === 1) {
+    createdDrug.value.frequency = e.frequency[0]
+  }
+  if (e.duration.length === 1) {
+    createdDrug.value.duration = e.duration[0]
+  }
+  if (e.note.length === 1) {
+    createdDrug.value.note = e.note[0]
+  }
   fetchedDrug.value = e
   createdDrug.value.name = e.name
 }
@@ -665,8 +683,8 @@ const changed = async (e) => {
 tr td,
 tr th {
   text-align: left;
-  width: 20%;
-  min-width: 13%;
+  width: auto;
+  min-width: 15%;
 }
 
 tr td:first-child,
