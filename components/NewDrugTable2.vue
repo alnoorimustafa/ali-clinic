@@ -1,8 +1,7 @@
 <template>
-  <UContainer>
+  <UContainer class="py-10">
     <!-- name age date -->
 
-    <div class="my-5 print-hide" />
     <div class="flex flex-row justify-between gap-4 mb-10 text-right" dir="rtl">
       <div>
         <p class="print-show">الاسم : {{ patientName }}</p>
@@ -161,10 +160,10 @@
                       </a>
                     </td>
                   </tr>
-                  <tr class="" dir="rtl" v-if="drug.note">
+                  <tr class="" v-if="drug.note">
                     <td
                       colspan="12"
-                      class="px-2 py-2 text-sm font-semibold text-gray-900 sm:pl-3 border-b-2 border-b-black text-center"
+                      class="px-2 py-2 text-sm font-semibold text-gray-900 sm:pl-3 border-b-4 text-center"
                     >
                       {{ drug.note }}
                     </td>
@@ -185,13 +184,13 @@
           <div class="mb-4">
             <p class="text-sm mb-2">Name</p>
             <UInputMenu
-              v-model="createdDrug.name"
               :search="search"
               @change="changed"
               :loading="loading"
               trailing
               option-attribute="name"
               @input="handleInput($event, 'name')"
+              v-model="createdDrug.name"
               placeholder="Name"
             >
               <template #option-empty="{ query }">
@@ -209,8 +208,7 @@
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">Brand</p>
-
-            <UInputMenu
+            <!-- <UInputMenu
               :trailing="false"
               :options="fetchedDrug.brand"
               nullable
@@ -227,7 +225,7 @@
                     <UIcon name="i-heroicons-plus" class="w-5 h-5" /> </template
                 ></UButton>
               </template>
-            </UInputMenu>
+            </UInputMenu> -->
           </div>
           <div class="mb-4">
             <p class="text-sm mb-2">Dosage</p>
@@ -516,6 +514,7 @@
 
 <script setup>
 import { format } from "date-fns"
+import aSelect from "ant-design-vue/es/select"
 
 import PocketBase from "pocketbase"
 
@@ -593,7 +592,6 @@ const openModal = async (modal, drug = {}) => {
         `https://mcq-db.dakakean.com/api/collections/drugs/records?filter=name="${drug.name}"&expand=doses,frequency`
       )
       loading.value = false
-
       fetchedDrug.value = response.items[0]
     } catch (error) {
       console.error(error)
@@ -612,9 +610,9 @@ const closeModal = (modal) => {
 }
 
 const saveEdit = () => {
-  const index = drugs.value.findIndex((drug) => {
-    return drug.id === selectedDrug.value.id
-  })
+  const index = drugs.value.findIndex(
+    (drug) => drug.id === selectedDrug.value.id
+  )
 
   if (index !== -1) {
     drugs.value.splice(index, 1, { ...selectedDrug.value })
@@ -622,8 +620,12 @@ const saveEdit = () => {
     drugs.value.push({ ...selectedDrug.value })
   }
 
+  console.log(drugs.value)
+
+  // Close the modal
   editModalOpen.value = false
 
+  // Reset selectedDrug
   selectedDrug.value = {}
 }
 
@@ -655,10 +657,6 @@ async function search(q) {
 }
 
 const changed = async (e) => {
-  fetchedDrug.value = e
-  createdDrug.value.name = e.name
-  createdDrug.value.id = e.id
-
   if (e.brand.length >= 1) {
     createdDrug.value.brand = e.brand[0]
   }
@@ -677,6 +675,8 @@ const changed = async (e) => {
   if (e.note.length >= 1) {
     createdDrug.value.note = e.note[0]
   }
+  fetchedDrug.value = e
+  createdDrug.value.name = e.name
 }
 </script>
 
