@@ -7,13 +7,13 @@
       <div>
         <p class="print-show">الاسم : {{ patientName }}</p>
         <UInput
-          class="print-hide mb-4"
+          class="print-hide mb-4 font-bold"
           v-model="patientName"
           placeholder="Patient Name"
         />
         <p class="print-show">العمر: {{ patientAge }}</p>
         <UInput
-          class="print-hide mb-4"
+          class="print-hide mb-4 font-bold"
           v-model="patientAge"
           placeholder="Patient Age"
         />
@@ -62,7 +62,9 @@
           <div
             class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
           >
-            <table class="min-w-full border divide-y divide-gray-300">
+            <table
+              class="min-w-full border-2 border-slate-800 divide-y divide-gray-300"
+            >
               <!-- Header -->
               <thead class="bg-white">
                 <tr>
@@ -108,10 +110,7 @@
                   >
                     Duration
                   </th>
-                  <th
-                    scope="col"
-                    class="relative py-3.5 pl-3 pr-4 sm:pr-3 print-hide"
-                  >
+                  <th scope="col" class="relative py-3.5 px-2 print-hide">
                     <span class="sr-only">Edit</span>
                   </th>
                 </tr>
@@ -123,30 +122,30 @@
                 <tbody class="bg-white col-span-12">
                   <tr
                     :class="[
-                      index === 0 ? 'border-gray-300' : 'border-gray-200',
-                      'border-t',
+                      index === 0 ? 'border-gray-800' : 'border-gray-800',
+                      'border-t-2',
                     ]"
                     class=""
                   >
                     <td class="px-4 py-2 text-sm">
                       {{ index + 1 }}
                     </td>
-                    <td class="px-4 py-2 text-sm font-medium">
+                    <td class="px-4 py-2 text-sm font-extrabold">
                       {{ drug.name }}
                     </td>
-                    <td class="px-4 py-2 text-sm font-medium">
+                    <td class="px-4 py-2 text-sm font-extrabold">
                       {{ drug.brand }}
                     </td>
-                    <td class="px-4 py-2 text-sm font-medium">
+                    <td class="px-4 py-2 text-sm font-extrabold">
                       {{ drug.dose }}
                     </td>
-                    <td class="px-4 py-2 text-sm font-medium">
+                    <td class="px-4 py-2 text-sm font-extrabold">
                       {{ drug.when }}
                     </td>
-                    <td class="px-4 py-2 text-sm font-medium">
+                    <td class="px-4 py-2 text-sm font-extrabold">
                       {{ drug.frequency }}
                     </td>
-                    <td class="px-4 py-2 text-sm font-medium">
+                    <td class="px-4 py-2 text-sm font-extrabold">
                       {{ drug.duration }}
                     </td>
                     <td
@@ -164,7 +163,7 @@
                   <tr class="" dir="rtl" v-if="drug.note">
                     <td
                       colspan="12"
-                      class="px-2 py-2 text-sm font-semibold text-gray-900 sm:pl-3 border-b-2 border-b-black text-center"
+                      class="px-2 py-2 text-sm font-extrabold text-gray-900 sm:pl-3 border-b-2 border-b-black text-center"
                     >
                       {{ drug.note }}
                     </td>
@@ -616,15 +615,24 @@ const saveEdit = () => {
     return drug.id === selectedDrug.value.id
   })
 
+  console.log("selectedDrug.value")
+  console.log(selectedDrug.value)
+
   if (index !== -1) {
-    drugs.value.splice(index, 1, { ...selectedDrug.value })
+    drugs.value.splice(index, 1, {
+      ...selectedDrug.value,
+      name: createdDrug.value.name,
+    })
   } else {
-    drugs.value.push({ ...selectedDrug.value })
+    drugs.value.push({ ...selectedDrug.value, name: createdDrug.value.name })
   }
+
+  console.log({ ...selectedDrug.value, name: createdDrug.value.name })
 
   editModalOpen.value = false
 
   selectedDrug.value = {}
+  createdDrug.value = {}
 }
 
 const addDrug = () => {
@@ -655,9 +663,47 @@ async function search(q) {
 }
 
 const changed = async (e) => {
+  console.log("e")
+  console.log(e)
   fetchedDrug.value = e
   createdDrug.value.name = e.name
   createdDrug.value.id = e.id
+  console.log("createdDrug.value")
+  console.log(createdDrug.value)
+
+  if (e.brand.length >= 1) {
+    createdDrug.value.brand = e.brand[0]
+    selectedDrug.value.brand = e.brand[0]
+  }
+  if (e.dose.length >= 1) {
+    createdDrug.value.dose = e.dose[0]
+    selectedDrug.value.dose = e.dose[0]
+  }
+  if (e.when.length >= 1) {
+    createdDrug.value.when = e.when[0]
+    selectedDrug.value.when = e.when[0]
+  }
+  if (e.frequency.length >= 1) {
+    createdDrug.value.frequency = e.frequency[0]
+    selectedDrug.value.frequency = e.frequency[0]
+  }
+  if (e.duration.length >= 1) {
+    createdDrug.value.duration = e.duration[0]
+    selectedDrug.value.duration = e.duration[0]
+  }
+  if (e.note.length >= 1) {
+    createdDrug.value.note = e.note[0]
+    selectedDrug.value.note = e.note[0]
+  }
+}
+
+const changedForEdit = (e) => {
+  console.log(e)
+  fetchedDrug.value = e
+  createdDrug.value.name = e.name
+  createdDrug.value.id = e.id
+
+  console.log(createdDrug.value.name)
 
   if (e.brand.length >= 1) {
     createdDrug.value.brand = e.brand[0]

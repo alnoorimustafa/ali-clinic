@@ -18,6 +18,7 @@
     "date-fns": "^4.1.0",
     "element-plus": "^2.9.3",
     "nuxt": "^3.15.1",
+    "nuxtjs-naive-ui": "1.0.2",
     "pdf-lib": "^1.17.1",
     "pdfmake": "^0.2.18",
     "pocketbase": "^0.25.0",

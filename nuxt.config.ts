@@ -1,15 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import Aura from "@primevue/themes/aura"
 
 export default defineNuxtConfig({
-  modules: ["@nuxt/ui", "@primevue/nuxt-module", "@element-plus/nuxt"],
+  modules: [
+    "@nuxt/ui",
+    "@primevue/nuxt-module",
+    "@element-plus/nuxt",
+    "nuxtjs-naive-ui",
+  ],
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  primevue: {
-    options: {
-      theme: {
-        preset: Aura,
-      },
-    },
-  },
 })
