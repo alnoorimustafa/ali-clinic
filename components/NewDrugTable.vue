@@ -7,6 +7,9 @@
     }"
   >
     <!-- font size and weight -->
+    <div class="my-5 text-right">
+      <UButton to="/create"> Create New Drug </UButton>
+    </div>
     <div
       class="my-5 flex flex-row justify-between gap-4 mb-10 text-right print-hide"
       dir="rtl"
@@ -96,13 +99,13 @@
           <p class="mt-2 text-gray-700">A list of drugs for the prescription</p>
         </div>
         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <button
+          <UButton
             type="button"
-            class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            class="block rounded-md px-3 py-2 text-center text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             @click="openModal('create')"
           >
             Add Drug
-          </button>
+          </UButton>
         </div>
       </div>
 
@@ -321,7 +324,14 @@
               @input="handleInput($event, 'name')"
               placeholder="Name"
             >
-              <template #option-empty="{ query }">
+              <template #option="{ option: drug }">
+                <span>{{ drug.icon }}</span>
+                <span>{{ drug.name }}</span>
+              </template>
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <span>{{ fetchedDrug.name }}</span>
                 <UButton
                   :loading="newLoading"
@@ -336,7 +346,6 @@
           </div>
           <div class="mb-4">
             <p class="mb-2">Brand</p>
-
             <UInputMenu
               :trailing="false"
               :options="fetchedDrug.brand"
@@ -345,7 +354,10 @@
               @input="handleInput($event, 'brand')"
               placeholder="Brand"
             >
-              <template #option-empty="{ query }">
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <UButton
                   :loading="newLoading"
                   @click="createNew('brand', createdDrug.brand)"
@@ -365,7 +377,10 @@
               @input="handleInput($event, 'dose')"
               placeholder="Dosage"
             >
-              <template #option-empty="{ query }">
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <UButton
                   :loading="newLoading"
                   @click="createNew('dose', createdDrug.dose)"
@@ -386,7 +401,10 @@
               v-model="createdDrug.when"
               placeholder="When"
             >
-              <template #option-empty="{ query }">
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <UButton
                   :loading="newLoading"
                   @click="createNew('when', createdDrug.when)"
@@ -407,7 +425,10 @@
               v-model="createdDrug.frequency"
               placeholder="Frequency"
             >
-              <template #option-empty="{ query }">
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <UButton
                   :loading="newLoading"
                   @click="createNew('frequency', createdDrug.frequency)"
@@ -428,7 +449,10 @@
               @input="handleInput($event, 'duration')"
               placeholder="Duration"
             >
-              <template #option-empty="{ query }">
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <UButton
                   :loading="newLoading"
                   @click="createNew('duration', createdDrug.duration)"
@@ -449,7 +473,10 @@
               @input="handleInput($event, 'note')"
               placeholder="Note"
             >
-              <template #option-empty="{ query }">
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <UButton
                   :loading="newLoading"
                   @click="createNew('note', createdDrug.note)"
@@ -497,7 +524,10 @@
               placeholder="Brand"
               @input="selectedDrug.brand = $event.target.value"
             >
-              <template #option-empty="{ query }">
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <UButton
                   :loading="newLoading"
                   @click="createNew('brand', selectedDrug.brand)"
@@ -520,7 +550,10 @@
               placeholder="Dose"
               @input="selectedDrug.dose = $event.target.value"
             >
-              <template #option-empty="{ query }">
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <UButton
                   :loading="newLoading"
                   @click="createNew('dose', selectedDrug.dose)"
@@ -543,7 +576,10 @@
               placeholder="When"
               @input="selectedDrug.when = $event.target.value"
             >
-              <template #option-empty="{ query }">
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <UButton
                   :loading="newLoading"
                   @click="createNew('when', selectedDrug.when)"
@@ -566,7 +602,10 @@
               placeholder="Frequency"
               @input="selectedDrug.frequency = $event.target.value"
             >
-              <template #option-empty="{ query }">
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <UButton
                   :loading="newLoading"
                   @click="createNew('frequency', selectedDrug.frequency)"
@@ -589,7 +628,10 @@
               placeholder="Duration"
               @input="selectedDrug.duration = $event.target.value"
             >
-              <template #option-empty="{ query }">
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <UButton
                   :loading="newLoading"
                   @click="createNew('Duration', selectedDrug.duration)"
@@ -612,7 +654,10 @@
               placeholder="Note"
               @input="selectedDrug.note = $event.target.value"
             >
-              <template #option-empty="{ query }">
+              <template
+                #option-empty="{ query }"
+                v-if="createdDrug.name !== ''"
+              >
                 <UButton
                   :loading="newLoading"
                   @click="createNew('Note', selectedDrug.note)"
@@ -644,6 +689,8 @@
 <script setup>
 import { format } from "date-fns"
 
+import { useLocalStorage } from "@vueuse/core"
+
 import PocketBase from "pocketbase"
 
 const pb = new PocketBase("https://mcq-db.dakakean.com")
@@ -651,6 +698,8 @@ const pb = new PocketBase("https://mcq-db.dakakean.com")
 const fontSize = ref("16")
 const fontWeight = ref("700")
 const whiteSpace = ref("nowrap")
+
+const drugList = useLocalStorage("drugList", [])
 
 const date = ref(new Date())
 const newLoading = ref(false)
@@ -780,6 +829,9 @@ const deleteDrug = () => {
 }
 
 async function search(q) {
+  if (!navigator.onLine) {
+    return drugList.value
+  }
   loading.value = true
   try {
     const response = await $fetch(
@@ -870,10 +922,6 @@ tr td:first-child,
 tr th:first-child {
   width: 3%;
   min-width: 3%;
-}
-
-tr td,
-tr th {
 }
 
 .print-show {

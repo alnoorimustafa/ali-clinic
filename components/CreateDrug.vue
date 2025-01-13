@@ -7,6 +7,7 @@ const pb = new PocketBase("https://mcq-db.dakakean.com")
 // Reactive state
 const selected = ref([])
 const form = ref({
+  icon: null,
   id: null,
   brand: null,
   name: null,
@@ -24,6 +25,7 @@ const errorMessage = ref("")
 // Helper functions
 const resetForm = () => {
   form.value = {
+    icon: null,
     id: null,
     brand: null,
     name: null,
@@ -49,6 +51,7 @@ const fetchDrugs = async () => {
   try {
     const records = await pb.collection("drugs").getFullList()
     drugs.value = records.map((drug) => ({
+      icon: drug.icon || "",
       id: drug.id || "",
       name: drug.name || "",
       brand: drug.brand || "",
@@ -70,6 +73,7 @@ const createOrUpdateDrug = async () => {
   console.log(form.value)
 
   const data = {
+    icon: form.value.icon,
     name: form.value.name,
     brand: parseMultilineInput(form.value.brand),
     frequency: parseMultilineInput(form.value.frequency),
@@ -128,6 +132,7 @@ const handleTableChange = (row) => {
     editing.value = true
     form.value = {
       id: row.id || "",
+      icon: row.icon || "",
       name: formatRowValue(row.name),
       brand: formatRowValue(row.brand),
       frequency: formatRowValue(row.frequency),
@@ -166,6 +171,7 @@ onMounted(fetchDrugs)
         <form @submit.prevent="createOrUpdateDrug">
           <div
             v-for="(label, key) in {
+              icon: 'Icon',
               name: 'Name',
               brand: 'Brand',
               frequency: 'Frequency',
@@ -184,7 +190,7 @@ onMounted(fetchDrugs)
             >
             <UTextarea
               autoresize
-              v-if="key !== 'name'"
+              v-if="key !== 'name' && key !== 'icon'"
               v-model="form[key]"
               :id="key"
               class="textarea"
