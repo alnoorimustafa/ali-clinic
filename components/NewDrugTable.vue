@@ -7,7 +7,7 @@
     }"
   >
     <!-- font size and weight -->
-    <div class="my-5 text-right">
+    <div class="my-5 text-right print-hide">
       <UButton to="/create"> Create New Drug </UButton>
     </div>
     <div
