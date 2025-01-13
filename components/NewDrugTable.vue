@@ -1,19 +1,71 @@
 <template>
-  <UContainer>
+  <UContainer
+    :style="{
+      fontSize: fontSize + 'px !important',
+      fontWeight: fontWeight + ' !important',
+      whiteSpace: whiteSpace,
+    }"
+  >
+    <!-- font size and weight -->
+    <div
+      class="my-5 flex flex-row justify-between gap-4 mb-10 text-right print-hide"
+      dir="rtl"
+    >
+      <div>
+        <p class="mb-1 mr-1 text-sm">حجم الخط</p>
+        <UInput
+          class="print-hide mb-4"
+          type="number"
+          v-model="fontSize"
+          placeholder="Font Size"
+        />
+        <p class="mb-1 mr-1 text-sm">وزن الخط</p>
+        <UInputMenu
+          :options="[
+            '100',
+            '200',
+            '300',
+            '400',
+            '500',
+            '600',
+            '700',
+            '800',
+            '900',
+          ]"
+          class="print-hide mb-4"
+          v-model="fontWeight"
+          placeholder="Font Weight"
+        />
+        <p class="mb-1 mr-1 text-sm">المساحة البيضاء</p>
+        <UInputMenu
+          :options="[
+            'normal',
+            'pre',
+            'pre-wrap',
+            'pre-line',
+            'wrap',
+            'collapse',
+            'preserve nowrap',
+            'nowrap',
+          ]"
+          class="print-hide mb-4"
+          v-model="whiteSpace"
+          placeholder="White Space"
+        />
+      </div>
+    </div>
     <!-- name age date -->
-
-    <div class="my-5 print-hide" />
     <div class="flex flex-row justify-between gap-4 mb-10 text-right" dir="rtl">
       <div>
         <p class="print-show">الاسم : {{ patientName }}</p>
         <UInput
-          class="print-hide mb-4 font-bold"
+          class="print-hide mb-4"
           v-model="patientName"
           placeholder="Patient Name"
         />
         <p class="print-show">العمر: {{ patientAge }}</p>
         <UInput
-          class="print-hide mb-4 font-bold"
+          class="print-hide mb-4"
           v-model="patientAge"
           placeholder="Patient Age"
         />
@@ -40,15 +92,13 @@
       <!-- Header and Add Button -->
       <div class="sm:flex sm:items-center print-hide">
         <div class="sm:flex-auto">
-          <h1 class="text-base font-semibold leading-6 text-gray-900">Drugs</h1>
-          <p class="mt-2 text-sm text-gray-700">
-            A list of drugs for the prescription
-          </p>
+          <h1 class="leading-6 text-gray-900">Drugs</h1>
+          <p class="mt-2 text-gray-700">A list of drugs for the prescription</p>
         </div>
         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <button
             type="button"
-            class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             @click="openModal('create')"
           >
             Add Drug
@@ -70,43 +120,71 @@
                 <tr>
                   <th
                     scope="col"
-                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
+                    class="py-3.5 px-4 text-left text-gray-900"
+                    :style="{
+                      fontWeight: fontWeight,
+                      fontSize: `${fontSize}px`,
+                    }"
                   >
                     #
                   </th>
                   <th
                     scope="col"
-                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
+                    class="py-3.5 px-4 text-left text-gray-900"
+                    :style="{
+                      fontWeight: fontWeight,
+                      fontSize: `${fontSize}px`,
+                    }"
                   >
                     Name
                   </th>
                   <th
                     scope="col"
-                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
+                    class="py-3.5 px-4 text-left text-gray-900"
+                    :style="{
+                      fontWeight: fontWeight,
+                      fontSize: `${fontSize}px`,
+                    }"
                   >
                     Brand
                   </th>
                   <th
                     scope="col"
-                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
+                    class="py-3.5 px-4 text-left text-gray-900"
+                    :style="{
+                      fontWeight: fontWeight,
+                      fontSize: `${fontSize}px`,
+                    }"
                   >
                     Dose
                   </th>
                   <th
                     scope="col"
-                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
+                    class="py-3.5 px-4 text-left text-gray-900"
+                    :style="{
+                      fontWeight: fontWeight,
+                      fontSize: `${fontSize}px`,
+                    }"
                   >
                     When
                   </th>
                   <th
                     scope="col"
-                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
+                    class="py-3.5 px-4 text-left text-gray-900"
+                    :style="{
+                      fontWeight: fontWeight,
+                      fontSize: `${fontSize}px`,
+                    }"
                   >
                     Frequency
                   </th>
                   <th
                     scope="col"
-                    class="py-3.5 px-4 text-left text-sm font-semibold text-gray-900"
+                    class="py-3.5 px-4 text-left text-gray-900"
+                    :style="{
+                      fontWeight: fontWeight,
+                      fontSize: `${fontSize}px`,
+                    }"
                   >
                     Duration
                   </th>
@@ -125,31 +203,77 @@
                       index === 0 ? 'border-gray-800' : 'border-gray-800',
                       'border-t-2',
                     ]"
-                    class=""
                   >
-                    <td class="px-4 py-2 text-sm">
+                    <td
+                      class="px-4 py-2"
+                      :style="{
+                        fontWeight: fontWeight,
+                        fontSize: `${fontSize}px`,
+                      }"
+                    >
                       {{ index + 1 }}
                     </td>
-                    <td class="px-4 py-2 text-sm font-extrabold">
+                    <td
+                      class="px-4 py-2 font-extrabold"
+                      :style="{
+                        fontWeight: fontWeight,
+                        fontSize: `${fontSize}px`,
+                        whiteSpace: 'nowrap',
+                      }"
+                    >
                       {{ drug.name }}
                     </td>
-                    <td class="px-4 py-2 text-sm font-extrabold">
+                    <td
+                      class="px-4 py-2 font-extrabold"
+                      :style="{
+                        fontWeight: fontWeight,
+                        fontSize: `${fontSize}px`,
+                      }"
+                    >
                       {{ drug.brand }}
                     </td>
-                    <td class="px-4 py-2 text-sm font-extrabold">
+                    <td
+                      class="px-4 py-2 font-extrabold"
+                      :style="{
+                        fontWeight: fontWeight,
+                        fontSize: `${fontSize}px`,
+                      }"
+                    >
                       {{ drug.dose }}
                     </td>
-                    <td class="px-4 py-2 text-sm font-extrabold">
+                    <td
+                      class="px-4 py-2 font-extrabold"
+                      :style="{
+                        fontWeight: fontWeight,
+                        fontSize: `${fontSize}px`,
+                      }"
+                    >
                       {{ drug.when }}
                     </td>
-                    <td class="px-4 py-2 text-sm font-extrabold">
+                    <td
+                      class="px-4 py-2 font-extrabold"
+                      :style="{
+                        fontWeight: fontWeight,
+                        fontSize: `${fontSize}px`,
+                      }"
+                    >
                       {{ drug.frequency }}
                     </td>
-                    <td class="px-4 py-2 text-sm font-extrabold">
+                    <td
+                      class="px-4 py-2 font-extrabold"
+                      :style="{
+                        fontWeight: fontWeight,
+                        fontSize: `${fontSize}px`,
+                      }"
+                    >
                       {{ drug.duration }}
                     </td>
                     <td
-                      class="relative py-2 px-4 text-right text-sm font-medium sm:pr-3 print-hide"
+                      class="relative py-2 px-4 text-right font-medium sm:pr-3 print-hide"
+                      :style="{
+                        fontWeight: fontWeight,
+                        fontSize: `${fontSize}px`,
+                      }"
                     >
                       <a
                         @click.prevent="openModal('edit', drug)"
@@ -163,7 +287,11 @@
                   <tr class="" dir="rtl" v-if="drug.note">
                     <td
                       colspan="12"
-                      class="px-2 py-2 text-sm font-extrabold text-gray-900 sm:pl-3 border-b-2 border-b-black text-center"
+                      class="px-2 py-2 font-extrabold text-gray-900 sm:pl-3 border-b-2 border-b-black text-center"
+                      :style="{
+                        fontWeight: fontWeight,
+                        fontSize: `${fontSize}px`,
+                      }"
                     >
                       {{ drug.note }}
                     </td>
@@ -179,10 +307,10 @@
     <!-- create modal -->
     <UModal v-model="createModalOpen">
       <div class="p-8">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Add New Drug</h2>
+        <h2 class="text-lg text-gray-900 mb-4">Add New Drug</h2>
         <div class="flex flex-col mb-4 w-full justify-between">
           <div class="mb-4">
-            <p class="text-sm mb-2">Name</p>
+            <p class="mb-2">Name</p>
             <UInputMenu
               v-model="createdDrug.name"
               :search="search"
@@ -207,7 +335,7 @@
             </UInputMenu>
           </div>
           <div class="mb-4">
-            <p class="text-sm mb-2">Brand</p>
+            <p class="mb-2">Brand</p>
 
             <UInputMenu
               :trailing="false"
@@ -229,7 +357,7 @@
             </UInputMenu>
           </div>
           <div class="mb-4">
-            <p class="text-sm mb-2">Dosage</p>
+            <p class="mb-2">Dosage</p>
             <UInputMenu
               :options="fetchedDrug.dose || []"
               nullable
@@ -249,7 +377,7 @@
             </UInputMenu>
           </div>
           <div class="mb-4">
-            <p class="text-sm mb-2">When</p>
+            <p class="mb-2">When</p>
             <UInputMenu
               searchable
               :options="fetchedDrug.when"
@@ -270,7 +398,7 @@
             </UInputMenu>
           </div>
           <div class="mb-4">
-            <p class="text-sm mb-2">Frequency</p>
+            <p class="mb-2">Frequency</p>
             <UInputMenu
               searchable
               :options="fetchedDrug.frequency"
@@ -291,13 +419,13 @@
             </UInputMenu>
           </div>
           <div class="mb-4">
-            <p class="text-sm mb-2">Duration</p>
+            <p class="mb-2">Duration</p>
             <UInputMenu
               searchable
               :options="fetchedDrug.duration"
               nullable
-              @input="handleInput($event, 'duration')"
               v-model="createdDrug.duration"
+              @input="handleInput($event, 'duration')"
               placeholder="Duration"
             >
               <template #option-empty="{ query }">
@@ -312,13 +440,13 @@
             </UInputMenu>
           </div>
           <div class="mb-4">
-            <p class="text-sm mb-2">Note</p>
+            <p class="mb-2">Note</p>
             <UInputMenu
               searchable
               :options="fetchedDrug.note"
               nullable
-              @input="handleInput($event, 'note')"
               v-model="createdDrug.note"
+              @input="handleInput($event, 'note')"
               placeholder="Note"
             >
               <template #option-empty="{ query }">
@@ -343,12 +471,12 @@
     <!-- edit modal -->
     <UModal v-model="editModalOpen">
       <div class="p-8">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+        <h2 class="text-lg text-gray-900 mb-4">
           {{ selectedDrug.id ? "Edit Drug" : "Add New Drug" }}
         </h2>
         <div class="flex flex-col mb-4 w-full justify-between">
           <div class="mb-4">
-            <p class="text-sm mb-2">Name</p>
+            <p class="mb-2">Name</p>
             <UInputMenu
               :search="search"
               @change="changed"
@@ -361,7 +489,7 @@
             />
           </div>
           <div class="mb-4">
-            <p class="text-sm mb-2">Brand</p>
+            <p class="mb-2">Brand</p>
             <UInputMenu
               :options="fetchedDrug.brand"
               nullable
@@ -382,7 +510,7 @@
             </UInputMenu>
           </div>
           <div class="mb-4">
-            <p class="text-sm mb-2">Dose</p>
+            <p class="mb-2">Dose</p>
             <UInputMenu
               searchable
               :options="fetchedDrug.dose"
@@ -405,7 +533,7 @@
             </UInputMenu>
           </div>
           <div class="mb-4">
-            <p class="text-sm mb-2">When</p>
+            <p class="mb-2">When</p>
             <UInputMenu
               searchable
               :options="fetchedDrug.when"
@@ -428,7 +556,7 @@
             </UInputMenu>
           </div>
           <div class="mb-4">
-            <p class="text-sm mb-2">Frequency</p>
+            <p class="mb-2">Frequency</p>
             <UInputMenu
               searchable
               :options="fetchedDrug.frequency"
@@ -451,7 +579,7 @@
             </UInputMenu>
           </div>
           <div class="mb-4">
-            <p class="text-sm mb-2">Duration</p>
+            <p class="mb-2">Duration</p>
             <UInputMenu
               searchable
               :options="fetchedDrug.duration"
@@ -474,7 +602,7 @@
             </UInputMenu>
           </div>
           <div class="mb-4">
-            <p class="text-sm mb-2">Note</p>
+            <p class="mb-2">Note</p>
             <UInputMenu
               searchable
               :options="fetchedDrug.note"
@@ -519,6 +647,10 @@ import { format } from "date-fns"
 import PocketBase from "pocketbase"
 
 const pb = new PocketBase("https://mcq-db.dakakean.com")
+
+const fontSize = ref("16")
+const fontWeight = ref("700")
+const whiteSpace = ref("nowrap")
 
 const date = ref(new Date())
 const newLoading = ref(false)
@@ -740,14 +872,8 @@ tr th:first-child {
   min-width: 3%;
 }
 
-tr td span,
-tr th span {
-  word-wrap: break-word;
-  white-space: normal;
-}
-
-tr td span {
-  font-weight: 600;
+tr td,
+tr th {
 }
 
 .print-show {

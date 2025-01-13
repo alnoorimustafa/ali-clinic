@@ -1,0 +1,1 @@
+tr td,tr th{min-width:15%;text-align:left;width:auto}tr td:first-child,tr th:first-child{min-width:3%;width:3%}.print-show{display:none}@media print{.print-show{display:block}.print-hide{display:none}}
