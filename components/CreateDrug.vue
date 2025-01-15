@@ -86,7 +86,9 @@ const parseMultilineInput = (input) => {
 
 const fetchDrugs = async () => {
   try {
-    const records = await pb.collection("drugs").getFullList()
+    const records = await pb.collection("drugs").getFullList({
+      sort: "name",
+    })
     drugs.value = records.map((drug) => ({
       id: drug.id || "",
       name: drug.name || "",
@@ -200,7 +202,7 @@ onMounted(fetchDrugs)
       <UButton to="/">back</UButton>
     </div>
     <div class="grid grid-cols-3 gap-6">
-      <div class="col-span-1 max-w-lg">
+      <div class="col-span-1 max-w-lg sticky-form">
         <h1 class="text-xl font-semibold mb-4">
           {{ editing ? "Edit Drug" : "Add New Drug" }}
         </h1>
@@ -273,6 +275,7 @@ onMounted(fetchDrugs)
         </UButton>
       </div>
       <div class="col-span-2">
+        <p class="text-sm text-gray-500 mb-2">{{ drugs.length }} drugs</p>
         <UTable
           v-model="selected"
           :rows="drugs"
@@ -297,6 +300,16 @@ onMounted(fetchDrugs)
 </template>
 
 <style scoped>
+.sticky-form {
+  position: sticky;
+  top: 1rem; /* Adjust to control the distance from the top */
+  max-width: 100%; /* Ensures it stays responsive */
+  background-color: #fff; /* Optional: ensures the background is visible */
+  padding: 1rem; /* Optional: adds padding for better appearance */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
+  z-index: 10; /* Keeps it above other elements */
+}
+
 .btn {
   background-color: #2563eb;
   color: #fff;
