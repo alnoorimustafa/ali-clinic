@@ -276,6 +276,7 @@
                       :style="{
                         fontWeight: fontWeight,
                         fontSize: `${fontSize}px`,
+                        userSelect: 'none',
                       }"
                     >
                       <a
@@ -798,6 +799,8 @@ const saveEdit = () => {
 
   console.log("selectedDrug.value")
   console.log(selectedDrug.value)
+  console.log("createdDrug.value")
+  console.log(createdDrug.value)
 
   if (index !== -1) {
     drugs.value.splice(index, 1, {
@@ -808,7 +811,7 @@ const saveEdit = () => {
     drugs.value.push({ ...selectedDrug.value, name: createdDrug.value.name })
   }
 
-  console.log({ ...selectedDrug.value, name: createdDrug.value.name })
+  // console.log({ ...selectedDrug.value, name: createdDrug.value.name })
 
   editModalOpen.value = false
 
