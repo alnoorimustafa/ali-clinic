@@ -13,24 +13,12 @@
     "@heroicons/vue": "^2.2.0",
     "@iconify/vue": "^4.3.0",
     "@nuxt/ui": "2.20.0",
-    "@primevue/themes": "^4.2.5",
     "@vueuse/nuxt": "12.4.0",
-    "ant-design-vue": "4.2.6",
     "date-fns": "^4.1.0",
-    "element-plus": "^2.9.3",
     "nuxt": "^3.15.1",
-    "nuxtjs-naive-ui": "1.0.2",
-    "pdf-lib": "^1.17.1",
-    "pdfmake": "^0.2.18",
     "pocketbase": "^0.25.0",
-    "primevue": "^4.2.5",
-    "radix-vue": "^1.9.12",
     "v-calendar": "^3.1.2",
     "vue": "latest",
     "vue-router": "latest"
-  },
-  "devDependencies": {
-    "@element-plus/nuxt": "^1.1.1",
-    "@primevue/nuxt-module": "^4.2.5"
   }
 }

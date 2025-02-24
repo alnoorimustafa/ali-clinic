@@ -11,16 +11,16 @@ const columns = ref([
     label: "id",
   },
   {
+    label: "Icon",
+    key: "icon",
+  },
+  {
     label: "Name",
     key: "name",
   },
   {
     label: "Brand",
     key: "brand",
-  },
-  {
-    label: "Icon",
-    key: "icon",
   },
   {
     label: "Frequency",
