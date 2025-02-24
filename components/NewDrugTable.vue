@@ -1,3 +1,234 @@
+<script setup>
+import { format } from "date-fns"
+
+import { useLocalStorage } from "@vueuse/core"
+
+import PocketBase from "pocketbase"
+
+const pb = new PocketBase("https://mcq-db.dakakean.com")
+
+const fontSize = ref("16")
+const fontWeight = ref("700")
+const whiteSpace = ref("nowrap")
+
+const drugList = useLocalStorage("drugList", [])
+const drugs = ref([])
+
+const date = ref(new Date())
+const newLoading = ref(false)
+const editModalOpen = ref(false)
+const createModalOpen = ref(false)
+const selectedDrug = ref({})
+const patientName = ref("")
+const patientAge = ref("")
+const loading = ref(false)
+const fetchedDrug = ref({
+  name: "",
+  brand: [],
+  frequency: [],
+  dose: [],
+  duration: [],
+  when: [],
+  note: [],
+})
+
+const createdDrug = ref({
+  name: "",
+  brand: "",
+  frequency: "",
+  dose: "",
+  duration: "",
+  when: "",
+  note: "",
+})
+
+const createNew = async (itemType, newItem) => {
+  if (!newItem) return
+  newLoading.value = true
+  if (itemType === "name") {
+    const newDrug = await pb.collection("drugs").create({ name: newItem })
+    fetchedDrug.value = newDrug
+  } else if (!fetchedDrug.value[itemType]) {
+    const newDrug = await pb
+      .collection("drugs")
+      .update(fetchedDrug.value.id, { [itemType]: [newItem] })
+    fetchedDrug.value = newDrug
+  } else {
+    try {
+      const updatedData = {
+        ...fetchedDrug.value,
+        [itemType]: [...fetchedDrug.value[itemType], newItem],
+      }
+      await pb.collection("drugs").update(fetchedDrug.value.id, updatedData)
+      fetchedDrug.value = updatedData
+    } catch (error) {
+      console.error("Error creating new item:", error)
+    }
+  }
+  newLoading.value = false
+}
+
+const handleInput = (event, inputName) => {
+  // Update the v-model when the user enters a custom value
+  createdDrug.value[inputName] = event.target.value
+  console.log("event.target.value")
+  console.log(event.target.value)
+}
+
+const openModal = async (modal, drug = {}) => {
+  if (modal === "create") {
+    createModalOpen.value = true
+  } else {
+    editModalOpen.value = true
+    selectedDrug.value = { ...drug }
+    console.log("selectedDrug.value")
+    console.log(selectedDrug.value)
+
+    try {
+      const response = await $fetch(
+        `https://mcq-db.dakakean.com/api/collections/drugs/records?filter=name="${drug.name}"&expand=doses,frequency`
+      )
+      loading.value = false
+      console.log("response.items")
+      console.log(response.items)
+
+      if (response.items.length > 0) {
+        fetchedDrug.value = response.items[0]
+      } else {
+        fetchedDrug.value = {}
+      }
+    } catch (error) {
+      console.error(error)
+      loading.value = false
+    }
+  }
+}
+
+const closeModal = (modal) => {
+  if (modal === "create") {
+    console.log("close modal create")
+    createdDrug.value = {}
+    createModalOpen.value = false
+  } else {
+    console.log("close modal create else")
+    editModalOpen.value = false
+    selectedDrug.value = {}
+  }
+}
+
+const saveEdit = () => {
+  const index = drugs.value.findIndex((drug) => {
+    return drug.id === selectedDrug.value.id
+  })
+
+  if (createdDrug.value.name) {
+    selectedDrug.value.name = createdDrug.value.name
+  }
+
+  if (index !== -1) {
+    drugs.value.splice(index, 1, {
+      ...selectedDrug.value,
+    })
+  } else {
+    drugs.value.push({ ...selectedDrug.value })
+  }
+
+  editModalOpen.value = false
+
+  selectedDrug.value = {}
+  createdDrug.value = {}
+}
+
+const addDrug = () => {
+  drugs.value.push({ ...createdDrug.value })
+  closeModal("create")
+  fetchedDrug.value = {}
+  createdDrug.value = {}
+}
+
+const deleteDrug = () => {
+  drugs.value = drugs.value.filter((drug) => drug.id !== selectedDrug.value.id)
+  closeModal("edit")
+}
+
+async function search(q) {
+  if (!navigator.onLine) {
+    return drugList.value
+  }
+  loading.value = true
+  try {
+    const response = await $fetch(
+      `https://mcq-db.dakakean.com/api/collections/drugs/records?filter=name~"${q}"&expand=doses,frequency`
+    )
+    loading.value = false
+
+    return response.items
+  } catch (error) {
+    console.error(error)
+    loading.value = false
+  }
+}
+
+const changed = async (e) => {
+  console.log("e.name")
+  console.log(e.name)
+
+  fetchedDrug.value = e
+  createdDrug.value.name = e.name
+  createdDrug.value.id = e.id
+
+  if (e.brand.length >= 1) {
+    createdDrug.value.brand = e.brand[0]
+    selectedDrug.value.brand = e.brand[0]
+  }
+  if (e.dose.length >= 1) {
+    createdDrug.value.dose = e.dose[0]
+    selectedDrug.value.dose = e.dose[0]
+  }
+  if (e.when.length >= 1) {
+    createdDrug.value.when = e.when[0]
+    selectedDrug.value.when = e.when[0]
+  }
+  if (e.frequency.length >= 1) {
+    createdDrug.value.frequency = e.frequency[0]
+    selectedDrug.value.frequency = e.frequency[0]
+  }
+  if (e.duration.length >= 1) {
+    createdDrug.value.duration = e.duration[0]
+    selectedDrug.value.duration = e.duration[0]
+  }
+  if (e.note.length >= 1) {
+    createdDrug.value.note = e.note[0]
+    selectedDrug.value.note = e.note[0]
+  }
+}
+
+const changedForEdit = (e) => {
+  fetchedDrug.value = e
+  createdDrug.value.name = e.name
+  createdDrug.value.id = e.id
+
+  if (e.brand.length >= 1) {
+    createdDrug.value.brand = e.brand[0]
+  }
+  if (e.dose.length >= 1) {
+    createdDrug.value.dose = e.dose[0]
+  }
+  if (e.when.length >= 1) {
+    createdDrug.value.when = e.when[0]
+  }
+  if (e.frequency.length >= 1) {
+    createdDrug.value.frequency = e.frequency[0]
+  }
+  if (e.duration.length >= 1) {
+    createdDrug.value.duration = e.duration[0]
+  }
+  if (e.note.length >= 1) {
+    createdDrug.value.note = e.note[0]
+  }
+}
+</script>
+
 <template>
   <UContainer
     :style="{
@@ -349,7 +580,7 @@
             <p class="mb-2">Brand</p>
             <UInputMenu
               :trailing="false"
-              :options="fetchedDrug.brand"
+              :options="fetchedDrug.brand ? fetchedDrug.brand : []"
               nullable
               v-model="createdDrug.brand"
               @input="handleInput($event, 'brand')"
@@ -372,7 +603,7 @@
           <div class="mb-4">
             <p class="mb-2">Dosage</p>
             <UInputMenu
-              :options="fetchedDrug.dose || []"
+              :options="fetchedDrug.dose ? fetchedDrug.dose : []"
               nullable
               v-model="createdDrug.dose"
               @input="handleInput($event, 'dose')"
@@ -396,7 +627,7 @@
             <p class="mb-2">When</p>
             <UInputMenu
               searchable
-              :options="fetchedDrug.when"
+              :options="fetchedDrug.when ? fetchedDrug.when : []"
               nullable
               @input="handleInput($event, 'when')"
               v-model="createdDrug.when"
@@ -420,7 +651,7 @@
             <p class="mb-2">Frequency</p>
             <UInputMenu
               searchable
-              :options="fetchedDrug.frequency"
+              :options="fetchedDrug.frequency ? fetchedDrug.frequency : []"
               nullable
               @input="handleInput($event, 'frequency')"
               v-model="createdDrug.frequency"
@@ -444,7 +675,7 @@
             <p class="mb-2">Duration</p>
             <UInputMenu
               searchable
-              :options="fetchedDrug.duration"
+              :options="fetchedDrug.duration ? fetchedDrug.duration : []"
               nullable
               v-model="createdDrug.duration"
               @input="handleInput($event, 'duration')"
@@ -468,7 +699,7 @@
             <p class="mb-2">Note</p>
             <UInputMenu
               searchable
-              :options="fetchedDrug.note"
+              :options="fetchedDrug.note ? fetchedDrug.note : []"
               nullable
               v-model="createdDrug.note"
               @input="handleInput($event, 'note')"
@@ -519,7 +750,7 @@
           <div class="mb-4">
             <p class="mb-2">Brand</p>
             <UInputMenu
-              :options="fetchedDrug.brand"
+              :options="fetchedDrug.brand ? fetchedDrug.brand : []"
               nullable
               v-model="selectedDrug.brand"
               placeholder="Brand"
@@ -544,7 +775,7 @@
             <p class="mb-2">Dose</p>
             <UInputMenu
               searchable
-              :options="fetchedDrug.dose"
+              :options="fetchedDrug.dose ? fetchedDrug.dose : []"
               nullable
               v-model.query="selectedDrug.dose"
               v-model="selectedDrug.dose"
@@ -570,7 +801,7 @@
             <p class="mb-2">When</p>
             <UInputMenu
               searchable
-              :options="fetchedDrug.when"
+              :options="fetchedDrug.when ? fetchedDrug.when : []"
               nullable
               v-model.query="selectedDrug.when"
               v-model="selectedDrug.when"
@@ -596,7 +827,7 @@
             <p class="mb-2">Frequency</p>
             <UInputMenu
               searchable
-              :options="fetchedDrug.frequency"
+              :options="fetchedDrug.frequency ? fetchedDrug.frequency : []"
               nullable
               v-model.query="selectedDrug.frequency"
               v-model="selectedDrug.frequency"
@@ -622,7 +853,7 @@
             <p class="mb-2">Duration</p>
             <UInputMenu
               searchable
-              :options="fetchedDrug.duration"
+              :options="fetchedDrug.duration ? fetchedDrug.duration : []"
               nullable
               v-model.query="selectedDrug.duration"
               v-model="selectedDrug.duration"
@@ -648,7 +879,7 @@
             <p class="mb-2">Note</p>
             <UInputMenu
               searchable
-              :options="fetchedDrug.note"
+              :options="fetchedDrug.note ? fetchedDrug.note : []"
               nullable
               v-model.query="selectedDrug.note"
               v-model="selectedDrug.note"
@@ -678,240 +909,14 @@
               >
             </div>
             <UButton class="" variant="outline" @click="closeModal('edit')"
-              >Cancel</UButton
-            >
+              >Cancel
+            </UButton>
           </div>
         </div>
       </div>
     </UModal>
   </UContainer>
 </template>
-
-<script setup>
-import { format } from "date-fns"
-
-import { useLocalStorage } from "@vueuse/core"
-
-import PocketBase from "pocketbase"
-
-const pb = new PocketBase("https://mcq-db.dakakean.com")
-
-const fontSize = ref("16")
-const fontWeight = ref("700")
-const whiteSpace = ref("nowrap")
-
-const drugList = useLocalStorage("drugList", [])
-
-const date = ref(new Date())
-const newLoading = ref(false)
-const editModalOpen = ref(false)
-const createModalOpen = ref(false)
-const selectedDrug = ref({})
-const patientName = ref("")
-const patientAge = ref("")
-const loading = ref(false)
-const fetchedDrug = ref({
-  name: "",
-  brand: [],
-  frequency: [],
-  dose: [],
-  duration: [],
-  when: [],
-  note: [],
-})
-
-const createdDrug = ref({
-  name: "",
-  brand: "",
-  frequency: "",
-  dose: "",
-  duration: "",
-  when: "",
-  note: "",
-})
-
-const createNew = async (itemType, newItem) => {
-  if (!newItem) return
-  newLoading.value = true
-  if (itemType === "name") {
-    const newDrug = await pb.collection("drugs").create({ name: newItem })
-    fetchedDrug.value = newDrug
-  } else if (!fetchedDrug.value[itemType]) {
-    const newDrug = await pb
-      .collection("drugs")
-      .update(fetchedDrug.value.id, { [itemType]: [newItem] })
-    fetchedDrug.value = newDrug
-  } else {
-    try {
-      const updatedData = {
-        ...fetchedDrug.value,
-        [itemType]: [...fetchedDrug.value[itemType], newItem],
-      }
-      await pb.collection("drugs").update(fetchedDrug.value.id, updatedData)
-      fetchedDrug.value = updatedData
-    } catch (error) {
-      console.error("Error creating new item:", error)
-    }
-  }
-  newLoading.value = false
-}
-
-const handleInput = (event, inputName) => {
-  // Update the v-model when the user enters a custom value
-  createdDrug.value[inputName] = event.target.value
-}
-
-const drugs = ref([])
-
-const openModal = async (modal, drug = {}) => {
-  if (modal === "create") {
-    createModalOpen.value = true
-  } else {
-    editModalOpen.value = true
-    selectedDrug.value = { ...drug }
-    try {
-      const response = await $fetch(
-        `https://mcq-db.dakakean.com/api/collections/drugs/records?filter=name="${drug.name}"&expand=doses,frequency`
-      )
-      loading.value = false
-
-      fetchedDrug.value = response.items[0]
-    } catch (error) {
-      console.error(error)
-      loading.value = false
-    }
-  }
-}
-
-const closeModal = (modal) => {
-  if (modal === "create") {
-    createModalOpen.value = false
-  } else {
-    editModalOpen.value = false
-    selectedDrug.value = {}
-  }
-}
-
-const saveEdit = () => {
-  const index = drugs.value.findIndex((drug) => {
-    return drug.id === selectedDrug.value.id
-  })
-
-  console.log("selectedDrug.value")
-  console.log(selectedDrug.value)
-  console.log("createdDrug.value")
-  console.log(createdDrug.value)
-
-  if (index !== -1) {
-    drugs.value.splice(index, 1, {
-      ...selectedDrug.value,
-      name: createdDrug.value.name,
-    })
-  } else {
-    drugs.value.push({ ...selectedDrug.value, name: createdDrug.value.name })
-  }
-
-  // console.log({ ...selectedDrug.value, name: createdDrug.value.name })
-
-  editModalOpen.value = false
-
-  selectedDrug.value = {}
-  createdDrug.value = {}
-}
-
-const addDrug = () => {
-  drugs.value.push({ ...createdDrug.value })
-  closeModal("create")
-  fetchedDrug.value = {}
-  createdDrug.value = {}
-}
-
-const deleteDrug = () => {
-  drugs.value = drugs.value.filter((drug) => drug.id !== selectedDrug.value.id)
-  closeModal("edit")
-}
-
-async function search(q) {
-  if (!navigator.onLine) {
-    return drugList.value
-  }
-  loading.value = true
-  try {
-    const response = await $fetch(
-      `https://mcq-db.dakakean.com/api/collections/drugs/records?filter=name~"${q}"&expand=doses,frequency`
-    )
-    loading.value = false
-
-    return response.items
-  } catch (error) {
-    console.error(error)
-    loading.value = false
-  }
-}
-
-const changed = async (e) => {
-  console.log("e")
-  console.log(e)
-  fetchedDrug.value = e
-  createdDrug.value.name = e.name
-  createdDrug.value.id = e.id
-  console.log("createdDrug.value")
-  console.log(createdDrug.value)
-
-  if (e.brand.length >= 1) {
-    createdDrug.value.brand = e.brand[0]
-    selectedDrug.value.brand = e.brand[0]
-  }
-  if (e.dose.length >= 1) {
-    createdDrug.value.dose = e.dose[0]
-    selectedDrug.value.dose = e.dose[0]
-  }
-  if (e.when.length >= 1) {
-    createdDrug.value.when = e.when[0]
-    selectedDrug.value.when = e.when[0]
-  }
-  if (e.frequency.length >= 1) {
-    createdDrug.value.frequency = e.frequency[0]
-    selectedDrug.value.frequency = e.frequency[0]
-  }
-  if (e.duration.length >= 1) {
-    createdDrug.value.duration = e.duration[0]
-    selectedDrug.value.duration = e.duration[0]
-  }
-  if (e.note.length >= 1) {
-    createdDrug.value.note = e.note[0]
-    selectedDrug.value.note = e.note[0]
-  }
-}
-
-const changedForEdit = (e) => {
-  console.log(e)
-  fetchedDrug.value = e
-  createdDrug.value.name = e.name
-  createdDrug.value.id = e.id
-
-  console.log(createdDrug.value.name)
-
-  if (e.brand.length >= 1) {
-    createdDrug.value.brand = e.brand[0]
-  }
-  if (e.dose.length >= 1) {
-    createdDrug.value.dose = e.dose[0]
-  }
-  if (e.when.length >= 1) {
-    createdDrug.value.when = e.when[0]
-  }
-  if (e.frequency.length >= 1) {
-    createdDrug.value.frequency = e.frequency[0]
-  }
-  if (e.duration.length >= 1) {
-    createdDrug.value.duration = e.duration[0]
-  }
-  if (e.note.length >= 1) {
-    createdDrug.value.note = e.note[0]
-  }
-}
-</script>
 
 <style>
 tr td,
