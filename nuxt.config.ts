@@ -4,4 +4,5 @@ export default defineNuxtConfig({
   modules: ["@nuxt/ui", "@vueuse/nuxt"],
   devtools: { enabled: true },
   ssr: false,
+  compatibilityDate: "2025-02-26",
 })

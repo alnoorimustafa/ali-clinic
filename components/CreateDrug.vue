@@ -59,6 +59,10 @@ const editing = ref(false)
 const isSubmitting = ref(false)
 const errorMessage = ref("")
 
+import { useDrugStore } from "../composables/useDrugStore"
+
+const { drugList } = useDrugStore()
+
 // Helper functions
 const resetForm = () => {
   form.value = {
@@ -71,6 +75,7 @@ const resetForm = () => {
     when: null,
     duration: null,
     note: null,
+    hidden: null,
   }
   editing.value = false
   selected.value = []
@@ -89,6 +94,7 @@ const fetchDrugs = async () => {
     const records = await pb.collection("drugs").getFullList({
       sort: "name",
     })
+    drugList.value = records
     drugs.value = records.map((drug) => ({
       id: drug.id || "",
       name: drug.name || "",
@@ -99,6 +105,7 @@ const fetchDrugs = async () => {
       when: drug.when || "",
       duration: drug.duration || "",
       note: drug.note || "",
+      hidden: drug.hidden || "",
     }))
   } catch (error) {
     console.error("Error fetching drugs:", error)
@@ -109,8 +116,6 @@ const createOrUpdateDrug = async () => {
   isSubmitting.value = true
   errorMessage.value = ""
 
-  console.log(form.value)
-
   const data = {
     icon: form.value.icon,
     name: form.value.name,
@@ -120,6 +125,7 @@ const createOrUpdateDrug = async () => {
     when: parseMultilineInput(form.value.when),
     duration: parseMultilineInput(form.value.duration),
     note: parseMultilineInput(form.value.note),
+    hidden: parseMultilineInput(form.value.hidden),
   }
 
   try {
@@ -179,6 +185,7 @@ const handleTableChange = (row) => {
       when: formatRowValue(row.when),
       duration: formatRowValue(row.duration),
       note: formatRowValue(row.note),
+      hidden: formatRowValue(row.hidden),
     }
   }
 }
@@ -217,6 +224,7 @@ onMounted(fetchDrugs)
             when: 'When to Take',
             duration: 'Duration',
             note: 'Note',
+            hidden: 'Hidden Note',
           }"
           :key="key"
           class="form-group mb-4"

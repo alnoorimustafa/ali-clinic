@@ -7,11 +7,15 @@ import PocketBase from "pocketbase"
 
 const pb = new PocketBase("https://mcq-db.dakakean.com")
 
+import { useDrugStore } from "../composables/useDrugStore"
+const { drugList } = useDrugStore()
+
 const fontSize = ref("16")
 const fontWeight = ref("700")
 const whiteSpace = ref("nowrap")
 
-const drugList = useLocalStorage("drugList", [])
+// const drugList = useLocalStorage("drugList", [])
+
 const drugs = ref([])
 
 const date = ref(new Date())
@@ -30,6 +34,7 @@ const fetchedDrug = ref({
   duration: [],
   when: [],
   note: [],
+  hidden: [],
 })
 
 const createdDrug = ref({
@@ -40,6 +45,7 @@ const createdDrug = ref({
   duration: "",
   when: "",
   note: "",
+  hidden: "",
 })
 
 const createNew = async (itemType, newItem) => {
@@ -153,7 +159,9 @@ const deleteDrug = () => {
 
 async function search(q) {
   if (!navigator.onLine) {
-    return drugList.value
+    return drugList.value.filter((drug) =>
+      drug.name.toLowerCase().includes(q.toLowerCase())
+    )
   }
   loading.value = true
   try {
@@ -162,11 +170,23 @@ async function search(q) {
     )
     loading.value = false
 
+    console.log(response.items)
+
     return response.items
   } catch (error) {
     console.error(error)
     loading.value = false
   }
+}
+
+const fetchDrugs = async () => {
+  try {
+    const all = await pb.collection("drugs").getFullList()
+
+    drugList.value = all
+
+    loading.value = false
+  } catch (error) {}
 }
 
 const changed = async (e) => {
@@ -201,32 +221,13 @@ const changed = async (e) => {
     createdDrug.value.note = e.note[0]
     selectedDrug.value.note = e.note[0]
   }
-}
-
-const changedForEdit = (e) => {
-  fetchedDrug.value = e
-  createdDrug.value.name = e.name
-  createdDrug.value.id = e.id
-
-  if (e.brand.length >= 1) {
-    createdDrug.value.brand = e.brand[0]
-  }
-  if (e.dose.length >= 1) {
-    createdDrug.value.dose = e.dose[0]
-  }
-  if (e.when.length >= 1) {
-    createdDrug.value.when = e.when[0]
-  }
-  if (e.frequency.length >= 1) {
-    createdDrug.value.frequency = e.frequency[0]
-  }
-  if (e.duration.length >= 1) {
-    createdDrug.value.duration = e.duration[0]
-  }
-  if (e.note.length >= 1) {
-    createdDrug.value.note = e.note[0]
+  if (e.hidden.length >= 1) {
+    createdDrug.value.hidden = e.hidden[0]
+    selectedDrug.value.hidden = e.hidden[0]
   }
 }
+
+onMounted(fetchDrugs)
 </script>
 
 <template>
@@ -718,6 +719,12 @@ const changedForEdit = (e) => {
                 ></UButton>
               </template>
             </UInputMenu>
+          </div>
+          <div class="mb-4">
+            <p class="mb-2">Hidden</p>
+            <p v-for="(item, index) in fetchedDrug.hidden" :key="index">
+              {{ item }}
+            </p>
           </div>
           <div class="mt-4">
             <UButton class="mr-4" @click="addDrug">Save</UButton>
