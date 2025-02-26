@@ -47,6 +47,7 @@ const form = ref({
   icon: "",
   id: null,
   name: null,
+  fdaName: null,
   brand: null,
   frequency: null,
   dose: null,
@@ -58,6 +59,7 @@ const drugs = ref([])
 const editing = ref(false)
 const isSubmitting = ref(false)
 const errorMessage = ref("")
+const drugExistFda = ref(null)
 
 import { useDrugStore } from "../composables/useDrugStore"
 
@@ -70,6 +72,7 @@ const resetForm = () => {
     id: null,
     brand: null,
     name: null,
+    fdaName: null,
     frequency: null,
     dose: null,
     when: null,
@@ -98,6 +101,7 @@ const fetchDrugs = async () => {
     drugs.value = records.map((drug) => ({
       id: drug.id || "",
       name: drug.name || "",
+      fdaName: drug.fdaName || "",
       icon: drug.icon || "",
       brand: drug.brand || "",
       frequency: drug.frequency || "",
@@ -119,6 +123,7 @@ const createOrUpdateDrug = async () => {
   const data = {
     icon: form.value.icon,
     name: form.value.name,
+    fdaName: form.value.fdaName,
     brand: parseMultilineInput(form.value.brand),
     frequency: parseMultilineInput(form.value.frequency),
     dose: parseMultilineInput(form.value.dose),
@@ -179,6 +184,7 @@ const handleTableChange = (row) => {
       id: row.id || "",
       icon: row.icon || "",
       name: formatRowValue(row.name),
+      fdaName: formatRowValue(row.fdaName),
       brand: formatRowValue(row.brand),
       frequency: formatRowValue(row.frequency),
       dose: formatRowValue(row.dose),
@@ -200,6 +206,13 @@ const deleteDrug = async () => {
   }
 }
 
+const checkDrug = async () => {
+  if (form.value.fdaName) {
+    const res = await checkDrugExists(form.value.fdaName)
+    drugExistFda.value = res
+  }
+}
+
 onMounted(fetchDrugs)
 </script>
 
@@ -218,6 +231,7 @@ onMounted(fetchDrugs)
           v-for="(label, key) in {
             icon: 'Icon',
             name: 'Name',
+            fdaName: 'FDA Name',
             brand: 'Brand',
             frequency: 'Frequency',
             dose: 'Dose',
@@ -237,11 +251,20 @@ onMounted(fetchDrugs)
           <UTextarea
             :required="false"
             autoresize
-            v-if="key !== 'name' && key !== 'icon'"
+            v-if="key !== 'name' && key !== 'icon' && key !== 'fdaName'"
             v-model="form[key]"
             :id="key"
             class="textarea"
             :placeholder="`Enter ${label.toLowerCase()} (one per line)`"
+          />
+          <UInput
+            v-else-if="key !== 'name' && key !== 'icon'"
+            v-model="form[key]"
+            :id="key"
+            type="text"
+            class="input"
+            :placeholder="`Enter ${label.toLowerCase()}`"
+            required
           />
           <UInput
             v-else
@@ -252,6 +275,18 @@ onMounted(fetchDrugs)
             :placeholder="`Enter ${label.toLowerCase()}`"
             required
           />
+        </div>
+        <div class="mb-4">
+          <UButton class="mb-2" @click="checkDrug">Check FDA Name</UButton>
+          <p :class="drugExistFda ? 'text-green-500' : 'text-red-500'">
+            {{
+              drugExistFda
+                ? "Name Exist"
+                : drugExistFda === null
+                ? ""
+                : "Name Does't Exist"
+            }}
+          </p>
         </div>
 
         <div v-if="errorMessage" class="text-red-500 mb-4">

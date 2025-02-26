@@ -1,11 +1,20 @@
 <script setup>
 import { format } from "date-fns"
 
-import { useLocalStorage } from "@vueuse/core"
+import { get, useLocalStorage } from "@vueuse/core"
 
 import PocketBase from "pocketbase"
 
 const pb = new PocketBase("https://mcq-db.dakakean.com")
+
+import { useDrugWarnings } from "../composables/useDrugWarnings"
+const {
+  warnings,
+  pregnancyWarnings,
+  loading: warningsLoading,
+  error: warningsError,
+  fetchDrugWarnings,
+} = useDrugWarnings()
 
 import { useDrugStore } from "../composables/useDrugStore"
 const { drugList } = useDrugStore()
@@ -28,6 +37,7 @@ const patientAge = ref("")
 const loading = ref(false)
 const fetchedDrug = ref({
   name: "",
+  fdaName: "",
   brand: [],
   frequency: [],
   dose: [],
@@ -39,6 +49,7 @@ const fetchedDrug = ref({
 
 const createdDrug = ref({
   name: "",
+  fdaName: "",
   brand: "",
   frequency: "",
   dose: "",
@@ -221,9 +232,15 @@ const changed = async (e) => {
     createdDrug.value.note = e.note[0]
     selectedDrug.value.note = e.note[0]
   }
-  if (e.hidden.length >= 1) {
+  if (e.hidden?.length >= 1) {
     createdDrug.value.hidden = e.hidden[0]
     selectedDrug.value.hidden = e.hidden[0]
+  }
+}
+
+async function getWarnings() {
+  if (fetchedDrug.value.name) {
+    await fetchDrugWarnings(fetchedDrug.value.fdaName)
   }
 }
 
@@ -720,15 +737,43 @@ onMounted(fetchDrugs)
               </template>
             </UInputMenu>
           </div>
-          <div class="mb-4">
-            <p class="mb-2">Hidden</p>
+          <div class="mb-4" v-if="fetchedDrug.hidden?.length > 0">
+            <p class="mb-2">Hidden Notes</p>
             <p v-for="(item, index) in fetchedDrug.hidden" :key="index">
+              {{ item }}
+            </p>
+          </div>
+          <!-- Warnings -->
+          <div class="mb-4" v-if="warnings?.length > 0">
+            <p class="mb-2">Warnings</p>
+            <p
+              v-for="(item, index) in warnings"
+              :key="index"
+              class="text-red-600 mb-2"
+            >
+              {{ item }}
+            </p>
+          </div>
+          <!-- Pregnancy Warnings -->
+          <div class="mb-4" v-if="pregnancyWarnings?.length > 0">
+            <p class="mb-2">Pregnancy Warnings</p>
+            <p
+              v-for="(item, index) in pregnancyWarnings"
+              :key="index"
+              class="text-red-600 mb-2"
+            >
               {{ item }}
             </p>
           </div>
           <div class="mt-4">
             <UButton class="mr-4" @click="addDrug">Save</UButton>
             <UButton class="mr-4" @click="closeModal('create')">Cancel</UButton>
+            <UButton
+              class="mr-4 bg-yellow-400"
+              @click="getWarnings"
+              :loading="warningsLoading"
+              >Show Warnings</UButton
+            >
           </div>
         </div>
       </div>
