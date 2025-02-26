@@ -11,6 +11,14 @@ import { useDrugWarnings } from "../composables/useDrugWarnings"
 const {
   warnings,
   pregnancyWarnings,
+  indications,
+  doNotUse,
+  askDoctor,
+  askDoctorOrPharmacist,
+  stopUse,
+  keepOutOfReach,
+  dosage,
+  storage,
   loading: warningsLoading,
   error: warningsError,
   fetchDrugWarnings,
@@ -743,27 +751,119 @@ onMounted(fetchDrugs)
               {{ item }}
             </p>
           </div>
-          <!-- Warnings -->
-          <div class="mb-4" v-if="warnings?.length > 0">
-            <p class="mb-2">Warnings</p>
-            <p
-              v-for="(item, index) in warnings"
-              :key="index"
-              class="text-red-600 mb-2"
-            >
-              {{ item }}
-            </p>
-          </div>
-          <!-- Pregnancy Warnings -->
-          <div class="mb-4" v-if="pregnancyWarnings?.length > 0">
-            <p class="mb-2">Pregnancy Warnings</p>
-            <p
-              v-for="(item, index) in pregnancyWarnings"
-              :key="index"
-              class="text-red-600 mb-2"
-            >
-              {{ item }}
-            </p>
+          <!-- FDA -->
+          <p class="mb-2 font-bold">FDA Information</p>
+          <div>
+            <!-- dosage -->
+            <div class="mb-4" v-if="dosage?.length > 0">
+              <p class="mb-2">Dosage</p>
+              <p
+                v-for="(item, index) in dosage"
+                :key="index"
+                class="text-red-600 mb-2"
+              >
+                {{ item }}
+              </p>
+            </div>
+            <!-- storage -->
+            <div class="mb-4" v-if="storage?.length > 0">
+              <p class="mb-2">Storage</p>
+              <p
+                v-for="(item, index) in storage"
+                :key="index"
+                class="text-red-600 mb-2"
+              >
+                {{ item }}
+              </p>
+            </div>
+            <!-- Warnings -->
+            <div class="mb-4" v-if="warnings?.length > 0">
+              <p class="mb-2">Warnings</p>
+              <p
+                v-for="(item, index) in warnings"
+                :key="index"
+                class="text-red-600 mb-2"
+              >
+                {{ item }}
+              </p>
+            </div>
+            <!-- Pregnancy Warnings -->
+            <div class="mb-4" v-if="pregnancyWarnings?.length > 0">
+              <p class="mb-2">Pregnancy Warnings</p>
+              <p
+                v-for="(item, index) in pregnancyWarnings"
+                :key="index"
+                class="text-red-600 mb-2"
+              >
+                {{ item }}
+              </p>
+            </div>
+            <!-- indications -->
+            <div class="mb-4" v-if="indications?.length > 0">
+              <p class="mb-2">Indications</p>
+              <p
+                v-for="(item, index) in indications"
+                :key="index"
+                class="text-red-600 mb-2"
+              >
+                {{ item }}
+              </p>
+            </div>
+            <!-- doNotUse -->
+            <div class="mb-4" v-if="doNotUse?.length > 0">
+              <p class="mb-2">Do Not Use</p>
+              <p
+                v-for="(item, index) in doNotUse"
+                :key="index"
+                class="text-red-600 mb-2"
+              >
+                {{ item }}
+              </p>
+            </div>
+            <!-- askDoctor -->
+            <div class="mb-4" v-if="askDoctor?.length > 0">
+              <p class="mb-2">Ask Doctor</p>
+              <p
+                v-for="(item, index) in askDoctor"
+                :key="index"
+                class="text-red-600 mb-2"
+              >
+                {{ item }}
+              </p>
+            </div>
+            <!-- askDoctorOrPharmacist -->
+            <div class="mb-4" v-if="askDoctorOrPharmacist?.length > 0">
+              <p class="mb-2">Ask Doctor or Pharmacist</p>
+              <p
+                v-for="(item, index) in askDoctorOrPharmacist"
+                :key="index"
+                class="text-red-600 mb-2"
+              >
+                {{ item }}
+              </p>
+            </div>
+            <!-- stopUse -->
+            <div class="mb-4" v-if="stopUse?.length > 0">
+              <p class="mb-2">Stop Use</p>
+              <p
+                v-for="(item, index) in stopUse"
+                :key="index"
+                class="text-red-600 mb-2"
+              >
+                {{ item }}
+              </p>
+            </div>
+            <!-- keepOutOfReach -->
+            <div class="mb-4" v-if="keepOutOfReach?.length > 0">
+              <p class="mb-2">Keep Out Of Reach</p>
+              <p
+                v-for="(item, index) in keepOutOfReach"
+                :key="index"
+                class="text-red-600 mb-2"
+              >
+                {{ item }}
+              </p>
+            </div>
           </div>
           <div class="mt-4">
             <UButton class="mr-4" @click="addDrug">Save</UButton>
@@ -772,7 +872,7 @@ onMounted(fetchDrugs)
               class="mr-4 bg-yellow-400"
               @click="getWarnings"
               :loading="warningsLoading"
-              >Show Warnings</UButton
+              >Show FDA Info</UButton
             >
           </div>
         </div>
