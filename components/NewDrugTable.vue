@@ -13,8 +13,6 @@ const {
   pregnancyWarnings,
   indications,
   doNotUse,
-  askDoctor,
-  askDoctorOrPharmacist,
   stopUse,
   keepOutOfReach,
   dosage,
@@ -178,14 +176,19 @@ const deleteDrug = () => {
 
 async function search(q) {
   if (!navigator.onLine) {
-    return drugList.value.filter((drug) =>
-      drug.name.toLowerCase().includes(q.toLowerCase())
+    return drugList.value.filter(
+      (drug) =>
+        drug.name.toLowerCase().includes(q.toLowerCase()) ||
+        drug.brand.toLowerCase().includes(q.toLowerCase())
     )
   }
   loading.value = true
   try {
+    // Escape special characters in the query for PocketBase filter
+    const escapedQuery = q.replace(/([\\"])/g, "\\$1")
+
     const response = await $fetch(
-      `https://mcq-db.dakakean.com/api/collections/drugs/records?filter=name~"${q}"&expand=doses,frequency`
+      `https://mcq-db.dakakean.com/api/collections/drugs/records?filter=(name~"${escapedQuery}"||brand~"${escapedQuery}")&expand=doses,frequency`
     )
     loading.value = false
 
@@ -195,6 +198,7 @@ async function search(q) {
   } catch (error) {
     console.error(error)
     loading.value = false
+    return [] // Return an empty array in case of an error to prevent further issues.
   }
 }
 
@@ -585,6 +589,7 @@ onMounted(fetchDrugs)
               <template #option="{ option: drug }">
                 <span>{{ drug.icon }}</span>
                 <span>{{ drug.name }}</span>
+                <span>{{ drug.brand }}</span>
               </template>
               <template
                 #option-empty="{ query }"
@@ -799,7 +804,7 @@ onMounted(fetchDrugs)
               </p>
             </div>
             <!-- indications -->
-            <div class="mb-4" v-if="indications?.length > 0">
+            <!-- <div class="mb-4" v-if="indications?.length > 0">
               <p class="mb-2">Indications</p>
               <p
                 v-for="(item, index) in indications"
@@ -808,9 +813,9 @@ onMounted(fetchDrugs)
               >
                 {{ item }}
               </p>
-            </div>
+            </div> -->
             <!-- doNotUse -->
-            <div class="mb-4" v-if="doNotUse?.length > 0">
+            <!-- <div class="mb-4" v-if="doNotUse?.length > 0">
               <p class="mb-2">Do Not Use</p>
               <p
                 v-for="(item, index) in doNotUse"
@@ -819,29 +824,7 @@ onMounted(fetchDrugs)
               >
                 {{ item }}
               </p>
-            </div>
-            <!-- askDoctor -->
-            <div class="mb-4" v-if="askDoctor?.length > 0">
-              <p class="mb-2">Ask Doctor</p>
-              <p
-                v-for="(item, index) in askDoctor"
-                :key="index"
-                class="text-red-600 mb-2"
-              >
-                {{ item }}
-              </p>
-            </div>
-            <!-- askDoctorOrPharmacist -->
-            <div class="mb-4" v-if="askDoctorOrPharmacist?.length > 0">
-              <p class="mb-2">Ask Doctor or Pharmacist</p>
-              <p
-                v-for="(item, index) in askDoctorOrPharmacist"
-                :key="index"
-                class="text-red-600 mb-2"
-              >
-                {{ item }}
-              </p>
-            </div>
+            </div> -->
             <!-- stopUse -->
             <div class="mb-4" v-if="stopUse?.length > 0">
               <p class="mb-2">Stop Use</p>
