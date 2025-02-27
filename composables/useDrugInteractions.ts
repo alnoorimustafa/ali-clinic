@@ -1,10 +1,17 @@
 import OpenAI from "openai"
+import PocketBase from "pocketbase"
+
+const pb = new PocketBase("https://mcq-db.dakakean.com")
+
+const key = await pb.collection("keys").getFullList()
 
 const openai = new OpenAI({
-  apiKey:
-    "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",
+  apiKey: key[0].value,
   dangerouslyAllowBrowser: true, // Required for client-side requests
 })
+console.log("OpenAI initialized")
+
+console.log(key[0].value)
 
 type Interaction = {
   summary: string

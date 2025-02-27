@@ -5,6 +5,8 @@ import { get, useLocalStorage } from "@vueuse/core"
 
 import PocketBase from "pocketbase"
 
+const key = useLocalStorage("openai-api-key", "")
+
 const pb = new PocketBase("https://mcq-db.dakakean.com")
 
 import { useDrugWarnings } from "../composables/useDrugWarnings"
