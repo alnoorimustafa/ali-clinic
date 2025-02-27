@@ -8,6 +8,9 @@ import PocketBase from "pocketbase"
 const pb = new PocketBase("https://mcq-db.dakakean.com")
 
 import { useDrugWarnings } from "../composables/useDrugWarnings"
+import { useDrugInteractions } from "@/composables/useDrugInteractions"
+import { useDrugStore } from "../composables/useDrugStore"
+
 const {
   warnings,
   pregnancyWarnings,
@@ -22,8 +25,13 @@ const {
   fetchDrugWarnings,
 } = useDrugWarnings()
 
-import { useDrugStore } from "../composables/useDrugStore"
 const { drugList } = useDrugStore()
+const {
+  checkInteraction,
+  interaction,
+  error: interactionError,
+  loading: loadingInteractions,
+} = useDrugInteractions()
 
 const fontSize = ref("16")
 const fontWeight = ref("700")
@@ -359,7 +367,17 @@ onMounted(fetchDrugs)
           <h1 class="leading-6 text-gray-900">Drugs</h1>
           <p class="mt-2 text-gray-700">A list of drugs for the prescription</p>
         </div>
-        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+        <div class="mt-4 sm:mt-0 sm:flex-none ml-2">
+          <UButton
+            :loading="loadingInteractions"
+            type="button"
+            class="block rounded-md px-3 py-2 text-center text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-yellow-500"
+            @click="checkInteraction(drugs.map((drug) => drug.name))"
+          >
+            Check Interactions
+          </UButton>
+        </div>
+        <div class="mt-4 sm:mt-0 sm:flex-none ml-2">
           <UButton
             type="button"
             class="block rounded-md px-3 py-2 text-center text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -566,6 +584,51 @@ onMounted(fetchDrugs)
             </table>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div v-if="interaction.summary || interactionError" class="my-10 text-wrap">
+      <p class="mb-2 font-bold text-yellow-600">Interactions</p>
+
+      <p v-if="interactionError" class="text-red-600">
+        {{ interactionError }}
+      </p>
+
+      <div v-else class="interaction">
+        <p class="font-bold mb-2">Summary:</p>
+        <p class="font-medium mb-4">{{ interaction.summary }}</p>
+
+        <p class="font-bold mb-2">Severity Level:</p>
+        <p class="font-medium mb-4">🔴 {{ interaction.severity }}</p>
+
+        <p class="font-bold mb-2">Mechanism:</p>
+        <p class="font-medium mb-4">{{ interaction.mechanism }}</p>
+
+        <ul>
+          <li v-for="(point, index) in interaction.details" :key="index">
+            {{ point }}
+          </li>
+        </ul>
+
+        <p class="font-bold mb-2">Clinical Recommendation:</p>
+        <p class="font-medium mb-4">{{ interaction.recommendation }}</p>
+
+        <p class="font-bold mb-2">Sources:</p>
+        <ul>
+          <li
+            class="font-medium mb-1"
+            v-for="(source, index) in interaction.sources"
+            :key="index"
+          >
+            <!-- <a :href="source.link" target="_blank">{{ source.name }}</a> -->
+            <a
+              :href="source.url"
+              target="_blank"
+              class="text-blue-500 underline"
+              >{{ source.name }}</a
+            >
+          </li>
+        </ul>
       </div>
     </div>
 

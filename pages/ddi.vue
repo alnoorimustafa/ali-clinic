@@ -1,0 +1,4 @@
+<template>
+  <uploadDDI />
+  <uploadDDIBatch />
+</template>
