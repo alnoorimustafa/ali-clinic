@@ -1,0 +1,1 @@
+import{_ as t,c as a,b as o,F as s,M as e,o as r}from"./2OMgjxI6.js";const _={};function l(p,d){const c=e("uploadDDI"),n=e("uploadDDIBatch");return r(),a(s,null,[o(c),o(n)],64)}const u=t(_,[["render",l]]);export{u as default};
